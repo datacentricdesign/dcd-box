@@ -1,0 +1,227 @@
+version: '3'
+
+volumes:
+  dcd-data-volume-mysql: {}
+  dcd-data-volume-influxdb: {}
+
+services:
+
+  hydra-migrate:
+    image: oryd/hydra:$HYDRA_VERSION
+    environment:
+      - LOG_LEVEL=debug
+      - HYDRA_SYSTEM_SECRET=$HYDRA_SYSTEM_SECRET
+    command:
+      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+    restart: on-failure
+
+  keto-migrate:
+    image: oryd/keto:$KETO_VERSION
+    environment:
+      - LOG_LEVEL=debug
+    command:
+      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+    restart: on-failure
+
+  oathkeeper-migrate:
+    image: oryd/oathkeeper:$OATHKEEPER_VERSION
+    environment:
+      - LOG_LEVEL=debug
+    command:
+      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+    restart: on-failure
+
+
+  postgresd:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER=$AC_DB_USER
+      - POSTGRES_PASSWORD=$AC_DB_PASSWORD
+      - POSTGRES_DB=$AC_DB
+
+  hydra:
+    image: oryd/hydra:$HYDRA_VERSION
+    ports:
+      - "4444:4444"
+      - "4445:4445"
+    depends_on:
+      - hydra-migrate
+    command:
+      serve all --dangerous-force-http
+    environment:
+      - LOG_LEVEL=debug
+      - SYSTEM_SECRET=$HYDRA_SYSTEM_SECRET
+      - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+      - OAUTH2_CONSENT_URL=http://$HOST:8888/auth/consent
+      - OAUTH2_LOGIN_URL=http://$HOST:8888/auth/signin
+      - LOGOUT_REDIRECT_URL=http://$HOST:8080/ui
+      - OAUTH2_ISSUER_URL=http://$HOST:4444
+      - OAUTH2_SHARE_ERROR_DEBUG=1
+      - OAUTH2_ERROR_URL=http://$HOST:8888/auth/error
+      - ISSUER_URL=http://$HOST:4444
+    restart: on-failure
+
+  oathkeeper-proxy:
+    image: oryd/oathkeeper:$OATHKEEPER_VERSION
+    ports:
+      - "4455:4455"
+    depends_on:
+      - oathkeeper-api
+      - hydra
+      - keto
+    command:
+      serve proxy
+    environment:
+      - LOG_LEVEL=debug
+      - PORT=4455
+#      - ISSUER_URL=http://localhost:8080/
+      - ISSUER_URL=http://$HOST:4455/
+      - OATHKEEPER_API_URL=http://oathkeeper-api:4456
+      - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
+      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
+      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_ADMIN_URL=http://hydra:4445
+      - CREDENTIALS_ISSUER_ID_TOKEN_LIFESPAN=1h
+      - CREDENTIALS_ISSUER_ID_TOKEN_JWK_REFRESH_INTERVAL=30m
+#      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://oathkeeper-api:4456
+      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://$HOST:4456
+      - AUTHORIZER_KETO_WARDEN_KETO_URL=http://keto:4466
+      - AUTHENTICATOR_ANONYMOUS_USERNAME=anonymous
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_CLIENT_ID=$OATHKEEPER_CLIENT_ID
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_CLIENT_SECRET=$OATHKEEPER_CLIENT_SECRET
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_TOKEN_URL=http://hydra:4444/oauth2/token
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=http://hydra:4445/oauth2/introspect
+      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=http://hydra:4444/oauth2/token
+    restart: on-failure
+
+  oathkeeper-api:
+    image: oryd/oathkeeper:$OATHKEEPER_VERSION
+    ports:
+      - "4456:4456"
+    depends_on:
+      - hydra-migrate
+    command:
+      serve api
+    environment:
+      - LOG_LEVEL=debug
+      - PORT=4456
+      - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+      - ISSUER_URL=http://oathkeeper-proxy:4455/
+      - AUTHORIZER_KETO_WARDEN_KETO_URL=http://keto:4466
+      - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
+      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
+      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_ADMIN_URL=http://hydra:4445
+      - CREDENTIALS_ISSUER_ID_TOKEN_LIFESPAN=1h
+      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://oathkeeper-api:4456
+      - CREDENTIALS_ISSUER_ID_TOKEN_JWK_REFRESH_INTERVAL=30m
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=http://hydra:4445/oauth2/introspect
+      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=http://hydra:4444/oauth2/token
+    restart: on-failure
+
+  keto:
+    image: oryd/keto:$KETO_VERSION
+    ports:
+      - "4466:4466"
+    depends_on:
+      - hydra
+      - keto-migrate
+    environment:
+      - LOG_LEVEL=debug
+      - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_CLIENT_ID=$KETO_CLIENT_ID
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_CLIENT_SECRET=$KETO_CLIENT_SECRET
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_TOKEN_URL=http://hydra:4444/oauth2/token
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=http://hydra:4445/oauth2/introspect
+      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=http://hydra:4444/oauth2/token
+    restart: on-failure
+
+  configurator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - HYDRA_VERSION=$HYDRA_VERSION
+        - KETO_VERSION=$KETO_VERSION
+        - OATHKEEPER_VERSION=$OATHKEEPER_VERSION
+    depends_on:
+      - hydra
+      - keto
+      - oathkeeper-api
+    volumes:
+      - ./scripts:/scripts
+    environment:
+      # All of these URLs MUST NOT end with a trailing slash. This is very important!
+      - HYDRA_URL=http://hydra:4444
+      - HYDRA_ADMIN_URL=http://hydra:4445
+      - KETO_URL=http://keto:4466
+      - RESOURCE_SERVER_URL=http://$HOST:4478
+      - OATHKEEPER_API_URL=http://oathkeeper-api:4456
+      - OATHKEEPER_PROXY_URL=http://oathkeeper-proxy:4455
+
+      # This sets the prefix for all resource, action, and subject names.
+      # Be aware that this prefix is automatically applied to all OAuth2 Clients as well.
+      - "HYDRA_SUBJECT_PREFIX=subjects:hydra:"
+      - "HYDRA_RESOURCE_PREFIX=resources:hydra:"
+      - "HYDRA_ACTION_PREFIX=actions:hydra:"
+      - "OATHKEEPER_RESOURCE_PREFIX=resources:oathkeeper:"
+      - "OATHKEEPER_ACTION_PREFIX=actions:oathkeeper:"
+      - "KETO_RESOURCE_PREFIX=resources:keto:"
+      - "KETO_ACTION_PREFIX=actions:keto:"
+
+      - OATHKEEPER_HYDRA_JWK_SET_ID=jwk:oathkeeper
+      - OATHKEEPER_HYDRA_CLIENT_ID=$OATHKEEPER_CLIENT_ID
+      - OATHKEEPER_HYDRA_CLIENT_SECRET=$OATHKEEPER_CLIENT_SECRET
+      - KETO_HYDRA_CLIENT_ID=$KETO_CLIENT_ID
+      - KETO_HYDRA_CLIENT_SECRET=$KETO_CLIENT_SECRET
+    restart: on-failure
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: $HOST
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "things:1:1:compact,persons:1:1:compact,properties:1:1:compact,values:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+
+  # == == == == == Stores == == == == ==
+
+  influxdb:
+    image: influxdb
+    volumes:
+      - data-volume-influxdb:/var/lib/influxdb
+    ports:
+      - "8086:8086"
+      - "8083:8083"
+    environment:
+      - INFLUXDB_DB=$INFLUXDB_DB
+      - INFLUXDB_ADMIN_ENABLED=true
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_SYSTEM_SECRET
+    volumes:
+      - data-volume-mysql:/var/lib/mysql
+      - ./config/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+
+  # == == == == == Services == == == == ==
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource

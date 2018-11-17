@@ -1,0 +1,4 @@
+config/hydra/clients/*.json
+config/oathkeeper/rules/*.json
+.idea
+.env

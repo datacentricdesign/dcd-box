@@ -196,7 +196,7 @@ services:
   influxdb:
     image: influxdb
     volumes:
-      - data-volume-influxdb:/var/lib/influxdb
+      - dcd-data-volume-influxdb:/var/lib/influxdb
     ports:
       - "8086:8086"
       - "8083:8083"
@@ -211,7 +211,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQL_SYSTEM_SECRET
     volumes:
-      - data-volume-mysql:/var/lib/mysql
+      - dcd-data-volume-mysql:/var/lib/mysql
       - ./config/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"

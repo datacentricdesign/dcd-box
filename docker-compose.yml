@@ -54,7 +54,7 @@ services:
       - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
       - OAUTH2_CONSENT_URL=http://$HOST:8888/auth/consent
       - OAUTH2_LOGIN_URL=http://$HOST:8888/auth/signin
-      - LOGOUT_REDIRECT_URL=http://$HOST:8080/ui
+      - OAUTH2_LOGOUT_REDIRECT_URL=http://$HOST:8080/ui
       - OAUTH2_ISSUER_URL=http://$HOST:4444
       - OAUTH2_SHARE_ERROR_DEBUG=1
       - OAUTH2_ERROR_URL=http://$HOST:8888/auth/error
@@ -184,7 +184,7 @@ services:
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: $HOST
+      KAFKA_ADVERTISED_HOST_NAME: $KAFKA_HOST
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "things:1:1:compact,persons:1:1:compact,properties:1:1:compact,values:1:1"
     volumes:

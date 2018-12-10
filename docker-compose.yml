@@ -53,24 +53,25 @@ services:
       - hydra-migrate
     command:
       serve all --dangerous-force-http
+#      serve all
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - SYSTEM_SECRET=$HYDRA_SYSTEM_SECRET
       - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
-      - OAUTH2_CONSENT_URL=http://$HOST:8888/auth/consent
-      - OAUTH2_LOGIN_URL=http://$HOST:8888/auth/signin
-      - OAUTH2_LOGOUT_REDIRECT_URL=http://$HOST:8080/ui
-      - OAUTH2_ISSUER_URL=http://$HOST:4444
+      - OAUTH2_CONSENT_URL=http://$HOST:$PORT/auth/consent
+      - OAUTH2_LOGIN_URL=http://$HOST:$PORT/auth/signin
+      - OAUTH2_LOGOUT_REDIRECT_URL=http://$HOST:$PORT/ui
+      - OAUTH2_ISSUER_URL=http://$HOST:$PORT
       - OAUTH2_SHARE_ERROR_DEBUG=1
-      - OAUTH2_ERROR_URL=http://$HOST:8888/auth/error
-      - ISSUER_URL=http://$HOST:4444
+      - OAUTH2_ERROR_URL=http://$HOST:$PORT/auth/error
+      - ISSUER_URL=http://$HOST:$PORT
     restart: on-failure
 
   oathkeeper-proxy:
     image: oryd/oathkeeper:$OATHKEEPER_VERSION
     container_name: oathkeeper_proxy
     ports:
-      - 4455:4455
+      - 8080:4455
     depends_on:
       - oathkeeper-api
       - hydra
@@ -80,16 +81,15 @@ services:
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - PORT=4455
-#      - ISSUER_URL=http://localhost:8080/
-      - ISSUER_URL=http://$HOST:4455/
+      - ISSUER_URL=http://$HOST:$PORT/
       - OATHKEEPER_API_URL=http://oathkeeper-api:4456
       - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
       - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
       - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_ADMIN_URL=http://hydra:4445
       - CREDENTIALS_ISSUER_ID_TOKEN_LIFESPAN=1h
       - CREDENTIALS_ISSUER_ID_TOKEN_JWK_REFRESH_INTERVAL=30m
-#      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://oathkeeper-api:4456
-      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://$HOST:4456
+      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://oathkeeper-api:4456
+#      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://$HOST:4456
       - AUTHORIZER_KETO_WARDEN_KETO_URL=http://keto:4466
       - AUTHENTICATOR_ANONYMOUS_USERNAME=anonymous
       - AUTHENTICATOR_OAUTH2_INTROSPECTION_CLIENT_ID=$OATHKEEPER_CLIENT_ID
@@ -112,7 +112,7 @@ services:
       - LOG_LEVEL=$LOG_LEVEL
       - PORT=4456
       - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
-      - ISSUER_URL=http://oathkeeper-proxy:4455/
+      - ISSUER_URL=http://localhost:8080/
       - AUTHORIZER_KETO_WARDEN_KETO_URL=http://keto:4466
       - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
       - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
@@ -162,9 +162,8 @@ services:
       - HYDRA_URL=http://hydra:4444
       - HYDRA_ADMIN_URL=http://hydra:4445
       - KETO_URL=http://keto:4466
-      - RESOURCE_SERVER_URL=http://$HOST:4478
       - OATHKEEPER_API_URL=http://oathkeeper-api:4456
-      - OATHKEEPER_PROXY_URL=http://oathkeeper-proxy:4455
+      - OATHKEEPER_PROXY_URL=http://oathkeeper-proxy:8080
 
       # This sets the prefix for all resource, action, and subject names.
       # Be aware that this prefix is automatically applied to all OAuth2 Clients as well.
@@ -194,7 +193,7 @@ services:
     ports:
       - 9092:9092
     environment:
-      - KAFKA_ADVERTISED_HOST_NAME=$KAFKA_HOST
+      - KAFKA_ADVERTISED_HOST_NAME=$HOST
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - "KAFKA_CREATE_TOPICS=things:1:1:compact,persons:1:1:compact,properties:1:1:compact,values:1:1"
     volumes:
@@ -231,19 +230,68 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
-    ports:
-      - "3000:3000"
+#    ports:
+#      - 3000:3000
     environment:
       - GF_INSTALL_PLUGINS=grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource
+      - GF_SERVER_ROOT_URL=http://$HOST:$PORT/grafana
+#      GF_SECURITY_ADMIN_PASSWORD: "admin"
+#      GF_SERVER_PROTOCOL: "https"
+#      GF_SERVER_CERT_FILE: "/ssl/iosense_tudelft_nl.pem"
+#      GF_SERVER_CERT_KEY: "/ssl/iosense_tudelft_nl.key"
 
-  proxy:
-    image: dcd/proxy:
-    container_name: proxy
-    ports:
-      - 80:80
-    environment:
-      - PORT=80
-      - SSL=false
-      - SSL_KEY_PATH=$SSL_KEY_PATH
-      - SSL_CERT_PATH=$SSL_CERT_PATH
-      - SSL_REDIRECT_PORT=$SSL_REDIRECT_PORT
+  # == == == == == Data-Centric Hub == == == == ==
+
+#  dcd-proxy:
+#    image: datacentricdesign/dcd-proxy:
+#    container_name: dcd-proxy
+#    ports:
+#      - 80:80
+#    environment:
+#      - PORT=80
+#      - SSL=false
+#      - SSL_KEY_PATH=$SSL_KEY_PATH
+#      - SSL_CERT_PATH=$SSL_CERT_PATH
+#      - SSL_REDIRECT_PORT=$SSL_REDIRECT_PORT
+#
+#  dcd-auth:
+#    image: datacentricdesign/dcd-auth:
+#    container_name: auth
+#
+#  dcd-api-http:
+#    image: datacentricdesign/dcd-api-http:
+#    container_name: dcd-api-http
+#    environment:
+#      - LOG_LEVEL=$LOG_LEVEL
+#      - PORT=4478
+#      - CRYPTO_KEY=$CRYPTO_KEY
+#      - MODEL_HOST=$HOST
+#      - KAFKA=true
+#      - KAFKA_HOST=$HOST
+#      - KAFKA_PORT=$KAFKA_PORT
+#      - API_URL=http://$HOST:$PORT/api
+#      - KETO_URL=http://keto:4466
+#      - HYDRA_ADMIN_URL=http://hydra:4445
+#      - HYDRA_URL=http://hydra:4444
+#      - OATHKEEPER_KEY_URL=http://oathkeeper-api:4456/.well-known/jwks.json
+#      - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
+#      - OAUTH2_CLIENT_ID=$API_OAUTH2_CLIENT_ID
+#      - OAUTH2_CLIENT_SECRET=$API_OAUTH2_CLIENT_SECRET
+#      - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
+#      - OAUTH2_INTROSPECT_URL=http://hydra:4445/oauth2/introspect
+#
+#  dcd-api-mqtt:
+#    image: datacentricdesign/dcd-api-http:
+#    container_name: dcd-api-http
+#
+#  dcd-store-influxdb:
+#    image: datacentricdesign/dcd-store-influxdb:
+#    container_name: dcd-store-influxdb
+#
+#  dcd-web-ui:
+#    image: datacentricdesign/dcd-web-ui:
+#    container_name: dcd-web-ui
+#
+#  dcd-website:
+#    image: datacentricdesign/dcd-website:
+#    container_name: dcd-website

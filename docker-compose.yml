@@ -3,6 +3,7 @@ version: '3'
 volumes:
   dcd-data-volume-mysql: {}
   dcd-data-volume-influxdb: {}
+  volume-confluence: {}
 
 services:
 
@@ -295,3 +296,13 @@ services:
 #  dcd-website:
 #    image: datacentricdesign/dcd-website:
 #    container_name: dcd-website
+
+  confluence:
+    image: atlassian/confluence-server
+    container_name: confluence
+    environment:
+      - CATALINA_CONNECTOR_PROXYNAME=dwd.tudelft.nl
+      - CATALINA_CONNECTOR_PROXYPORT=80
+      - CATALINA_CONTEXT_PATH=/conflucence
+    volumes:
+      - volume-confluence:/var/atlassian/application-data/confluence

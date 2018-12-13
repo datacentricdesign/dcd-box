@@ -53,8 +53,8 @@ services:
     depends_on:
       - hydra-migrate
     command:
-#      serve all --dangerous-force-http
-      serve all
+      serve all --dangerous-force-http
+#      serve all
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - SYSTEM_SECRET=$HYDRA_SYSTEM_SECRET

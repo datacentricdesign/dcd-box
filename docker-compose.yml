@@ -59,13 +59,13 @@ services:
       - LOG_LEVEL=$LOG_LEVEL
       - SYSTEM_SECRET=$HYDRA_SYSTEM_SECRET
       - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
-      - OAUTH2_CONSENT_URL=http://$HOST:$PORT/auth/consent
-      - OAUTH2_LOGIN_URL=http://$HOST:$PORT/auth/signin
-      - OAUTH2_LOGOUT_REDIRECT_URL=http://$HOST:$PORT/ui
-      - OAUTH2_ISSUER_URL=http://$HOST:$PORT
+      - OAUTH2_CONSENT_URL=$PROTOCOL://$HOST:$PORT/auth/consent
+      - OAUTH2_LOGIN_URL=$PROTOCOL://$HOST:$PORT/auth/signin
+      - OAUTH2_LOGOUT_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/ui
+      - OAUTH2_ISSUER_URL=$PROTOCOL://$HOST:$PORT
       - OAUTH2_SHARE_ERROR_DEBUG=1
-      - OAUTH2_ERROR_URL=http://$HOST:$PORT/auth/error
-      - ISSUER_URL=http://$HOST:$PORT
+      - OAUTH2_ERROR_URL=$PROTOCOL://$HOST:$PORT/auth/error
+      - ISSUER_URL=$PROTOCOL://$HOST:$PORT
     restart: on-failure
 
   oathkeeper-proxy:
@@ -82,7 +82,7 @@ services:
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - PORT=4455
-      - ISSUER_URL=http://$HOST:$PORT/
+      - ISSUER_URL=$PROTOCOL://$HOST:$PORT/
       - OATHKEEPER_API_URL=http://oathkeeper-api:4456
       - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
       - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
@@ -164,7 +164,7 @@ services:
       - HYDRA_ADMIN_URL=http://hydra:4445
       - KETO_URL=http://keto:4466
       - OATHKEEPER_API_URL=http://oathkeeper-api:4456
-      - OATHKEEPER_PROXY_URL=http://oathkeeper-proxy:4455
+      - OATHKEEPER_PROXY_URL=http://$HOST:$PORT
 
       # This sets the prefix for all resource, action, and subject names.
       # Be aware that this prefix is automatically applied to all OAuth2 Clients as well.
@@ -237,11 +237,11 @@ services:
 #      - 3000:3000
     environment:
       - GF_INSTALL_PLUGINS=grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource
-      - GF_SERVER_ROOT_URL=http://$HOST:$PORT/grafana
+      - GF_SERVER_ROOT_URL=$PROTOCOL://$HOST:$PORT/grafana
       - GF_SECURITY_ADMIN_PASSWORD=$GRAFANA_ADMIN_PASS
-      - GF_SERVER_PROTOCOL=https
-      - GF_SERVER_CERT_FILE=$SSL_KEY_PATH
-      - GF_SERVER_CERT_KEY=$SSL_CERT_PATH
+#      - GF_SERVER_PROTOCOL=$PROTOCOL
+#      - GF_SERVER_CERT_FILE=$SSL_KEY_PATH
+#      - GF_SERVER_CERT_KEY=$SSL_CERT_PATH
 
   # == == == == == Data-Centric Hub == == == == ==
 
@@ -306,7 +306,7 @@ services:
       - CATALINA_CONNECTOR_PROXYNAME=$HOST
       - CATALINA_CONNECTOR_PROXYPORT=$PORT
       - CATALINA_CONTEXT_PATH=/confluence
-      - CATALINA_CONNECTOR_SCHEME=https
+      - CATALINA_CONNECTOR_SCHEME=$PROTOCOL
       - CATALINA_CONNECTOR_SECURE=true
     volumes:
       - volume-confluence:/var/atlassian/application-data/confluence

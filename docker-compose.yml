@@ -72,7 +72,7 @@ services:
     image: oryd/oathkeeper:$OATHKEEPER_VERSION
     container_name: oathkeeper-proxy
     ports:
-      - 8080:4455
+      - $PORT:4455
     depends_on:
       - oathkeeper-api
       - hydra

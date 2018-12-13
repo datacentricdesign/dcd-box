@@ -4,6 +4,7 @@ volumes:
   dcd-data-volume-mysql: {}
   dcd-data-volume-influxdb: {}
   volume-confluence: {}
+  volume-confluence-mysql: {}
 
 services:
 
@@ -314,3 +315,13 @@ services:
       - CATALINA_CONNECTOR_SECURE=true
     volumes:
       - volume-confluence:/var/atlassian/application-data/confluence
+
+  mysql:
+    image: mysql:5.7
+    container_name: confluence-mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=$CONFLUENCE_MYSQL_SYSTEM_SECRET
+      - MYSQL_DATABASE=confluence
+    volumes:
+      - volume-confluence-mysql:/var/lib/mysql

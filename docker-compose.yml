@@ -53,8 +53,8 @@ services:
     depends_on:
       - hydra-migrate
     command:
-      serve all --dangerous-force-http
-#      serve all
+#      serve all --dangerous-force-http
+      serve all
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - SYSTEM_SECRET=$HYDRA_SYSTEM_SECRET
@@ -238,10 +238,10 @@ services:
     environment:
       - GF_INSTALL_PLUGINS=grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource
       - GF_SERVER_ROOT_URL=http://$HOST:$PORT/grafana
-#      GF_SECURITY_ADMIN_PASSWORD: "admin"
-#      GF_SERVER_PROTOCOL: "https"
-#      GF_SERVER_CERT_FILE: "/ssl/iosense_tudelft_nl.pem"
-#      GF_SERVER_CERT_KEY: "/ssl/iosense_tudelft_nl.key"
+      - GF_SECURITY_ADMIN_PASSWORD=$GRAFANA_ADMIN_PASS
+      - GF_SERVER_PROTOCOL=https
+      - GF_SERVER_CERT_FILE=$SSL_KEY_PATH
+      - GF_SERVER_CERT_KEY=$SSL_CERT_PATH
 
   # == == == == == Data-Centric Hub == == == == ==
 
@@ -305,6 +305,8 @@ services:
     environment:
       - CATALINA_CONNECTOR_PROXYNAME=$HOST
       - CATALINA_CONNECTOR_PROXYPORT=$PORT
-      - CATALINA_CONTEXT_PATH=/conflucence
+      - CATALINA_CONTEXT_PATH=/confluence
+      - CATALINA_CONNECTOR_SCHEME=https
+      - CATALINA_CONNECTOR_SECURE=true
     volumes:
       - volume-confluence:/var/atlassian/application-data/confluence

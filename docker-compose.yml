@@ -4,7 +4,7 @@ volumes:
   dcd-data-volume-mysql: {}
   dcd-data-volume-influxdb: {}
   volume-confluence: {}
-  volume-confluence-mysql: {}
+  volume-confluence-postgres: {}
 
 services:
 
@@ -316,12 +316,13 @@ services:
     volumes:
       - volume-confluence:/var/atlassian/application-data/confluence
 
-  mysql:
-    image: mysql:5.7
-    container_name: confluence-mysql
-    restart: always
+  confluence-postgres:
+    image: postgres:9.6
+    container_name: confluence-postgres
     environment:
-      - MYSQL_ROOT_PASSWORD=$CONFLUENCE_MYSQL_SYSTEM_SECRET
-      - MYSQL_DATABASE=confluence
+      - POSTGRES_USER=$CONFLUENCE_DB_USER
+      - POSTGRES_PASSWORD=$CONFLUENCE_DB_PASSWORD
+      - POSTGRES_DB=$CONFLUENCE_DB
+    restart: always
     volumes:
-      - volume-confluence-mysql:/var/lib/mysql
+      - volume-confluence-postgres/var/lib/postgresql/data

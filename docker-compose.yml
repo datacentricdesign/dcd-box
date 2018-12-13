@@ -9,7 +9,7 @@ services:
 
   hydra-migrate:
     image: oryd/hydra:$HYDRA_VERSION
-    container_name: hydra_migrate
+    container_name: hydra-migrate
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - HYDRA_SYSTEM_SECRET=$HYDRA_SYSTEM_SECRET
@@ -19,7 +19,7 @@ services:
 
   keto-migrate:
     image: oryd/keto:$KETO_VERSION
-    container_name: keto_migrate
+    container_name: keto-migrate
     environment:
       - LOG_LEVEL=$LOG_LEVEL
     command:
@@ -28,7 +28,7 @@ services:
 
   oathkeeper-migrate:
     image: oryd/oathkeeper:$OATHKEEPER_VERSION
-    container_name: oathkeeper_migrate
+    container_name: oathkeeper-migrate
     environment:
       - LOG_LEVEL=$LOG_LEVEL
     command:
@@ -70,7 +70,7 @@ services:
 
   oathkeeper-proxy:
     image: oryd/oathkeeper:$OATHKEEPER_VERSION
-    container_name: oathkeeper_proxy
+    container_name: oathkeeper-proxy
     ports:
       - 8080:4455
     depends_on:
@@ -102,7 +102,7 @@ services:
 
   oathkeeper-api:
     image: oryd/oathkeeper:$OATHKEEPER_VERSION
-    container_name: oathkeeper_api
+    container_name: oathkeeper-api
     ports:
       - 4456:4456
     depends_on:
@@ -185,6 +185,7 @@ services:
 
   zookeeper:
     image: wurstmeister/zookeeper
+    container_name: zookeeper
     ports:
       - 2181:2181
 
@@ -205,6 +206,7 @@ services:
 
   influxdb:
     image: influxdb
+    container_name: influxdb
     volumes:
       - dcd-data-volume-influxdb:/var/lib/influxdb
     ports:

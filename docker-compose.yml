@@ -303,8 +303,8 @@ services:
     image: atlassian/confluence-server
     container_name: confluence
     environment:
-      - CATALINA_CONNECTOR_PROXYNAME=dwd.tudelft.nl
-      - CATALINA_CONNECTOR_PROXYPORT=80
+      - CATALINA_CONNECTOR_PROXYNAME=$HOST
+      - CATALINA_CONNECTOR_PROXYPORT=$PORT
       - CATALINA_CONTEXT_PATH=/conflucence
     volumes:
       - volume-confluence:/var/atlassian/application-data/confluence

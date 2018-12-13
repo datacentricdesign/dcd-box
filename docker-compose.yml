@@ -321,7 +321,7 @@ services:
       - CATALINA_CONNECTOR_SECURE=true
     volumes:
       - volume-confluence:/var/atlassian/application-data/confluence
-      - ./config/confluence:/opt/atlassian/confluence/confluence/WEB-INF/classes
+      - ./config/confluence/jmxContext.xml:/opt/atlassian/confluence/confluence/WEB-INF/classes/jmxContext.xml
 
   confluence-postgres:
     image: postgres:9.6

@@ -6,6 +6,12 @@ volumes:
   volume-confluence: {}
   volume-confluence-postgres: {}
 
+#  volume-mattermost-postgres: {}
+#  volume-mattermost-app-config: {}
+#  volume-mattermost-app-data: {}
+#  volume-mattermost-app-logs: {}
+#  volume-mattermost-app-plugins: {}
+
 services:
 
   hydra-migrate:
@@ -325,4 +331,56 @@ services:
       - POSTGRES_DB=$CONFLUENCE_DB
     restart: always
     volumes:
-      - volume-confluence-postgres/var/lib/postgresql/data
+      - volume-confluence-postgres:/var/lib/postgresql/data
+
+
+
+
+
+
+
+
+
+#  mattermost-postgres:
+#    build: ../mattermost/db
+#    read_only: true
+#    restart: unless-stopped
+#    volumes:
+#      - volume-mattermost-postgres:/var/lib/postgresql/data
+#      - /etc/localtime:/etc/localtime:ro
+#    environment:
+#      - POSTGRES_USER=$MATTERMOST_DB_USER
+#      - POSTGRES_PASSWORD=$MATTERMOST_DB_PASSWORD
+#      - POSTGRES_DB=$MATTERMOST_DB
+#
+#  mattermost-app:
+#    build:
+#      context: ../mattermost/app
+#      # uncomment following lines for team edition or change UID/GID
+#      # args:
+#      #   - edition=team
+#      #   - PUID=1000
+#      #   - PGID=1000
+#    restart: unless-stopped
+#    volumes:
+#      - volume-mattermost-app-config:/mattermost/config:rw
+#      - volume-mattermost-app-data:/mattermost/data:rw
+#      - volume-mattermost-app-logs:/mattermost/logs:rw
+#      - volume-mattermost-app-plugins:/mattermost/plugins:rw
+#      - /etc/localtime:/etc/localtime:ro
+#    environment:
+#      # set same as db credentials and dbname
+#      - MM_USERNAME=$MATTERMOST_DB_USER
+#      - MM_PASSWORD=$MATTERMOST_DB_PASSWORD
+#      - MM_DBNAME=$MATTERMOST_DB
+#      # in case your config is not in default location
+#      #- MM_CONFIG=/mattermost/config/config.json
+#
+#    web:
+#      build: ../mattermost/web
+#      read_only: true
+#      restart: unless-stopped
+#      volumes:
+#        # This directory must have cert files if you want to enable SSL
+##        - ./volumes/web/cert:/cert:ro
+#        - /etc/localtime:/etc/localtime:ro

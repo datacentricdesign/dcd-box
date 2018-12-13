@@ -321,6 +321,7 @@ services:
       - CATALINA_CONNECTOR_SECURE=true
     volumes:
       - volume-confluence:/var/atlassian/application-data/confluence
+      - ./config/confluence:/var/confluence/WEB-INF/classes
 
   confluence-postgres:
     image: postgres:9.6

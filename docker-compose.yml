@@ -257,12 +257,18 @@ services:
 
 
   dcd-auth:
-    image: datacentricdesign/dcd-auth:
+#    image: datacentricdesign/dcd-auth:
+    build:
+      context: ../dcd-auth
+      dockerfile: Dockerfile
     container_name: auth
 
   dcd-api-http:
-    image: datacentricdesign/dcd-api-http:
+#    image: datacentricdesign/dcd-api-http:
     container_name: dcd-api-http
+    build:
+      context: ../dcd-api-http
+      dockerfile: Dockerfile
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - PORT=4478
@@ -283,15 +289,24 @@ services:
       - OAUTH2_INTROSPECT_URL=http://hydra:4445/oauth2/introspect
 
   dcd-api-mqtt:
-    image: datacentricdesign/dcd-api-http:
-    container_name: dcd-api-http
+#    image: datacentricdesign/dcd-api-mqtt:
+    build:
+      context: ../dcd-api-mqtt
+      dockerfile: Dockerfile
+    container_name: dcd-api-mqtt
 
   dcd-store-influxdb:
-    image: datacentricdesign/dcd-store-influxdb:
+#    image: datacentricdesign/dcd-store-influxdb:
+    build:
+      context: ../dcd-store-influxdb
+      dockerfile: Dockerfile
     container_name: dcd-store-influxdb
 
   dcd-web-ui:
-    image: datacentricdesign/dcd-web-ui:
+#    image: datacentricdesign/dcd-web-ui:
+    build:
+      context: ../dcd-web-ui
+      dockerfile: Dockerfile
     container_name: dcd-web-ui
 
 

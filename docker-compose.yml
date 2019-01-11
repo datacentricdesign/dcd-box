@@ -73,6 +73,7 @@ services:
       - OAUTH2_SHARE_ERROR_DEBUG=1
       - OAUTH2_ERROR_URL=$PROTOCOL://$HOST:$PORT/auth/error
       - ISSUER_URL=$PROTOCOL://$HOST:$PORT
+      - HTTPS_ALLOW_TERMINATION_FROM=0.0.0.0/0
     restart: on-failure
 
   oathkeeper-proxy:

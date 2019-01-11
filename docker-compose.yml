@@ -263,6 +263,9 @@ services:
       context: ../dcd-auth
       dockerfile: Dockerfile
     container_name: auth
+    environment:
+      - LOG_LEVEL=$LOG_LEVEL
+      - HTTPS=true
 
   dcd-api-http:
 #    image: datacentricdesign/dcd-api-http:
@@ -276,6 +279,7 @@ services:
       - CRYPTO_KEY=$CRYPTO_KEY
       - MODEL_HOST=$HOST
       - KAFKA=true
+      - HTTPS=true
       - KAFKA_HOST=$HOST
       - KAFKA_PORT=$KAFKA_PORT
       - API_URL=$PROTOCOL://$HOST:$PORT/api
@@ -294,6 +298,10 @@ services:
       context: ../dcd-api-mqtt
       dockerfile: Dockerfile
     container_name: dcd-api-mqtt
+    environment:
+      - LOG_LEVEL=$LOG_LEVEL
+      - HTTPS=true
+
 
   dcd-store-influxdb:
 #    image: datacentricdesign/dcd-store-influxdb:
@@ -308,6 +316,9 @@ services:
       context: ../dcd-web-ui
       dockerfile: Dockerfile
     container_name: dcd-web-ui
+    environment:
+      - LOG_LEVEL=$LOG_LEVEL
+      - HTTPS=true
 
 
 #  dcd-website:

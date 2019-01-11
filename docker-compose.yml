@@ -205,7 +205,7 @@ services:
     ports:
       - 9092:9092
     environment:
-      - KAFKA_ADVERTISED_HOST_NAME=$KAFKA_HOST
+      - KAFKA_ADVERTISED_HOST_NAME=$HOST
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - "KAFKA_CREATE_TOPICS=things:1:1:compact,persons:1:1:compact,properties:1:1:compact,values:1:1"
     volumes:

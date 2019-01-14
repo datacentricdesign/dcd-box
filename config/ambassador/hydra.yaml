@@ -1,0 +1,5 @@
+apiVersion: ambassador/v0
+kind:  Mapping
+name:  hydra_oauth2_mapping
+prefix: /oauth2/
+service: hydra

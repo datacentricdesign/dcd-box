@@ -1,0 +1,5 @@
+apiVersion: ambassador/v0
+kind:  Mapping
+name:  ory-oathkeeper_mapping
+prefix: /ory-oathkeeper/
+service: ory-oathkeeper

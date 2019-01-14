@@ -1,0 +1,43 @@
+apiVersion: ambassador/v0
+kind: Module
+name: tls
+config:
+  # The 'server' block configures TLS termination. 'enabled' is the only
+  # required element.
+  server:
+    # If 'enabled' is True, TLS termination will be enabled.
+    enabled: True
+
+    # If you set 'redirect_cleartext_from' to a port number, HTTP traffic
+    # to that port will be redirected to HTTPS traffic. Typically you would
+    # use port 80, of course.
+    redirect_cleartext_from: 80
+
+    # These are optional. They should not be present unless you are using
+    # a custom Docker build to install certificates onto the container
+    # filesystem, in which case YOU WILL STILL NEED TO SET enabled: True
+    # above.
+    #
+    cert_chain_file: /etc/certs/tls.crt   # remember to set enabled!
+    private_key_file: /etc/certs/tls.key  # remember to set enabled!
+
+    # Enable TLS ALPN protocol, typically HTTP2 to negotiate it with HTTP2
+    # clients over TLS. This must be set to be able to use grpc over TLS.
+    # alpn_protocols: h2
+
+  # The 'client' block configures TLS client-certificate authentication.
+  # 'enabled' is the only required element.
+  client:
+    # If 'enabled' is True, TLS client-certificate authentication will occur.
+    enabled: False
+
+    # If 'cert_required' is True, TLS client certificates will be required
+    # for every connection.
+    # cert_required: False
+
+    # This is optional. It should not be present unless you are using
+    # a custom Docker build to install certificates onto the container
+    # filesystem, in which case YOU WILL STILL NEED TO SET enabled: True
+    # above.
+    #
+    # cacert_chain_file: /etc/cacert/tls.crt  # remember to set enabled!

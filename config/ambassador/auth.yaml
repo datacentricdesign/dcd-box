@@ -1,0 +1,7 @@
+apiVersion: ambassador/v0
+kind:  AuthService
+name:  authentication
+auth_service: ory-oathkeeper
+path_prefix: /judge
+allowed_headers:
+- Authorization

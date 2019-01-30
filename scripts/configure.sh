@@ -16,9 +16,9 @@ fi
 if [ -d "/config/keto/policies/" ]; then
     envsubstfiles "/config/keto/policies/*.json"
 fi
-if [ -d "/config/oathkeeper/rules/" ]; then
-    envsubstfiles "/config/oathkeeper/rules/*.json"
-fi
+#if [ -d "/config/oathkeeper/rules/" ]; then
+#    envsubstfiles "/config/oathkeeper/rules/*.json"
+#fi
 
 echo "Executing bootstrap scripts..."
 
@@ -34,9 +34,9 @@ if [ -d "/config/hydra" ]; then
     backoff /scripts/services/hydra.sh "/config/hydra"
 fi
 
-if [ -d "/config/oathkeeper" ]; then
-    backoff /scripts/services/oathkeeper.sh ${oathkeeper_url%/}/ "/config/oathkeeper"
-fi
+#if [ -d "/config/oathkeeper" ]; then
+#    backoff /scripts/services/oathkeeper.sh ${oathkeeper_url%/}/ "/config/oathkeeper"
+#fi
 
 if [ -d "/config/keto" ]; then
     backoff /scripts/services/keto.sh ${keto_url%/}/ "/config/keto"

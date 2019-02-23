@@ -179,6 +179,63 @@ CREATE TABLE IF NOT EXISTS `d9` (
   ENGINE = INNODB
   DEFAULT CHARSET = LATIN1;
 
+CREATE TABLE IF NOT EXISTS `d10` (
+  `property_index_id` INT(11) UNSIGNED NOT NULL,
+  `timestamp`         BIGINT(15)       NOT NULL,
+  `value1`            FLOAT(11)        NOT NULL,
+  `value2`            FLOAT(11)        NOT NULL,
+  `value3`            FLOAT(11)        NOT NULL,
+  `value4`            FLOAT(11)        NOT NULL,
+  `value5`            FLOAT(11)        NOT NULL,
+  `value6`            FLOAT(11)        NOT NULL,
+  `value7`            FLOAT(11)        NOT NULL,
+  `value8`            FLOAT(11)        NOT NULL,
+  `value9`            FLOAT(11)        NOT NULL,
+  `value10`           FLOAT(11)        NOT NULL,
+  PRIMARY KEY (`property_index_id`, `timestamp`)
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = LATIN1;
+
+CREATE TABLE IF NOT EXISTS `d11` (
+  `property_index_id` INT(11) UNSIGNED NOT NULL,
+  `timestamp`         BIGINT(15)       NOT NULL,
+  `value1`            FLOAT(11)        NOT NULL,
+  `value2`            FLOAT(11)        NOT NULL,
+  `value3`            FLOAT(11)        NOT NULL,
+  `value4`            FLOAT(11)        NOT NULL,
+  `value5`            FLOAT(11)        NOT NULL,
+  `value6`            FLOAT(11)        NOT NULL,
+  `value7`            FLOAT(11)        NOT NULL,
+  `value8`            FLOAT(11)        NOT NULL,
+  `value9`            FLOAT(11)        NOT NULL,
+  `value10`           FLOAT(11)        NOT NULL,
+  `value11`           FLOAT(11)        NOT NULL,
+  PRIMARY KEY (`property_index_id`, `timestamp`)
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = LATIN1;
+
+CREATE TABLE IF NOT EXISTS `d12` (
+  `property_index_id` INT(11) UNSIGNED NOT NULL,
+  `timestamp`         BIGINT(15)       NOT NULL,
+  `value1`            FLOAT(11)        NOT NULL,
+  `value2`            FLOAT(11)        NOT NULL,
+  `value3`            FLOAT(11)        NOT NULL,
+  `value4`            FLOAT(11)        NOT NULL,
+  `value5`            FLOAT(11)        NOT NULL,
+  `value6`            FLOAT(11)        NOT NULL,
+  `value7`            FLOAT(11)        NOT NULL,
+  `value8`            FLOAT(11)        NOT NULL,
+  `value9`            FLOAT(11)        NOT NULL,
+  `value10`           FLOAT(11)        NOT NULL,
+  `value11`           FLOAT(11)        NOT NULL,
+  `value12`           FLOAT(11)        NOT NULL,
+  PRIMARY KEY (`property_index_id`, `timestamp`)
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = LATIN1;
+
 CREATE TABLE IF NOT EXISTS `d13` (
   `property_index_id` INT(11) UNSIGNED NOT NULL,
   `timestamp`         BIGINT(15)       NOT NULL,
@@ -195,6 +252,51 @@ CREATE TABLE IF NOT EXISTS `d13` (
   `value11`           FLOAT(11)        NOT NULL,
   `value12`           FLOAT(11)        NOT NULL,
   `value13`           FLOAT(11)        NOT NULL,
+  PRIMARY KEY (`property_index_id`, `timestamp`)
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = LATIN1;
+
+CREATE TABLE IF NOT EXISTS `d14` (
+  `property_index_id` INT(11) UNSIGNED NOT NULL,
+  `timestamp`         BIGINT(15)       NOT NULL,
+  `value1`            FLOAT(11)        NOT NULL,
+  `value2`            FLOAT(11)        NOT NULL,
+  `value3`            FLOAT(11)        NOT NULL,
+  `value4`            FLOAT(11)        NOT NULL,
+  `value5`            FLOAT(11)        NOT NULL,
+  `value6`            FLOAT(11)        NOT NULL,
+  `value7`            FLOAT(11)        NOT NULL,
+  `value8`            FLOAT(11)        NOT NULL,
+  `value9`            FLOAT(11)        NOT NULL,
+  `value10`           FLOAT(11)        NOT NULL,
+  `value11`           FLOAT(11)        NOT NULL,
+  `value12`           FLOAT(11)        NOT NULL,
+  `value13`           FLOAT(11)        NOT NULL,
+  `value14`           FLOAT(11)        NOT NULL,
+  PRIMARY KEY (`property_index_id`, `timestamp`)
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = LATIN1;
+
+CREATE TABLE IF NOT EXISTS `d15` (
+  `property_index_id` INT(11) UNSIGNED NOT NULL,
+  `timestamp`         BIGINT(15)       NOT NULL,
+  `value1`            FLOAT(11)        NOT NULL,
+  `value2`            FLOAT(11)        NOT NULL,
+  `value3`            FLOAT(11)        NOT NULL,
+  `value4`            FLOAT(11)        NOT NULL,
+  `value5`            FLOAT(11)        NOT NULL,
+  `value6`            FLOAT(11)        NOT NULL,
+  `value7`            FLOAT(11)        NOT NULL,
+  `value8`            FLOAT(11)        NOT NULL,
+  `value9`            FLOAT(11)        NOT NULL,
+  `value10`           FLOAT(11)        NOT NULL,
+  `value11`           FLOAT(11)        NOT NULL,
+  `value12`           FLOAT(11)        NOT NULL,
+  `value13`           FLOAT(11)        NOT NULL,
+  `value14`           FLOAT(11)        NOT NULL,
+  `value15`           FLOAT(11)        NOT NULL,
   PRIMARY KEY (`property_index_id`, `timestamp`)
 )
   ENGINE = INNODB

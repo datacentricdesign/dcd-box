@@ -62,6 +62,20 @@ CREATE TABLE IF NOT EXISTS `dimensions` (
   ENGINE = INNODB
   DEFAULT CHARSET = LATIN1;
 
+CREATE TABLE IF NOT EXISTS `classes` (
+  `id`                INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name`              VARCHAR(100)     NOT NULL,
+  `description`              TEXT             NULL,
+  `dimension_id` INT(11) UNSIGNED NOT NULL,
+  CONSTRAINT `pk_classes_id` PRIMARY KEY (`id`),
+  CONSTRAINT `fk_classes_dimension_id` FOREIGN KEY (`dimension_id`)
+  REFERENCES `dimensions` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = LATIN1;
+
 CREATE TABLE IF NOT EXISTS `d1` (
   `property_index_id` INT(11) UNSIGNED NOT NULL,
   `timestamp`         BIGINT(15)       NOT NULL,

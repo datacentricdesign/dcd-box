@@ -65,7 +65,8 @@ CREATE TABLE IF NOT EXISTS `dimensions` (
 CREATE TABLE IF NOT EXISTS `classes` (
   `id`                INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name`              VARCHAR(100)     NOT NULL,
-  `description`              TEXT             NULL,
+  `description`       TEXT             NULL,
+  `value`             INT(11)          NOT NULL,
   `dimension_id` INT(11) UNSIGNED NOT NULL,
   CONSTRAINT `pk_classes_id` PRIMARY KEY (`id`),
   CONSTRAINT `fk_classes_dimension_id` FOREIGN KEY (`dimension_id`)

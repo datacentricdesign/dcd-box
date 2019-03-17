@@ -67,10 +67,10 @@ CREATE TABLE IF NOT EXISTS `classes` (
   `name`              VARCHAR(100)     NOT NULL,
   `description`       TEXT             NULL,
   `value`             INT(11)          NOT NULL,
-  `dimension_id` INT(11) UNSIGNED NOT NULL,
+  `property_id`       VARCHAR(100)     NOT NULL,
   CONSTRAINT `pk_classes_id` PRIMARY KEY (`id`),
-  CONSTRAINT `fk_classes_dimension_id` FOREIGN KEY (`dimension_id`)
-  REFERENCES `dimensions` (`id`)
+  CONSTRAINT `fk_classes_property_id` FOREIGN KEY (`property_id`)
+  REFERENCES `properties` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 )

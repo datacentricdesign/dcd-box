@@ -3,14 +3,6 @@ version: '3'
 volumes:
   dcd-data-volume-mysql: {}
   dcd-data-volume-influxdb: {}
-  volume-confluence: {}
-  volume-confluence-postgres: {}
-
-#  volume-mattermost-postgres: {}
-#  volume-mattermost-app-config: {}
-#  volume-mattermost-app-data: {}
-#  volume-mattermost-app-logs: {}
-#  volume-mattermost-app-plugins: {}
 
 services:
 

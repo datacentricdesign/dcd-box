@@ -1,0 +1,7 @@
+apiVersion: ambassador/v0
+kind:  Mapping
+name:  lighting_app_mapping
+prefix: /
+rewrite: /
+timeout_ms: 10000
+service: dcd-app-lighting:8080

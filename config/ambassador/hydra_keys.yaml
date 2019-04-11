@@ -1,0 +1,9 @@
+apiVersion: ambassador/v0
+kind:  Mapping
+name:  hydra_keys_mapping
+prefix: /keys/
+rewrite: /keys/
+timeout_ms: 10000
+add_request_headers:
+  X-Forwarded-Proto: "https"
+service: hydra:4445

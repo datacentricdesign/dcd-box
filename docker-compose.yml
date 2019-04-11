@@ -1,17 +1,5 @@
 version: '3'
 
-volumes:
-  dcd-data-volume-mysql: {}
-  dcd-data-volume-influxdb: {}
-  volume-confluence: {}
-  volume-confluence-postgres: {}
-
-#  volume-mattermost-postgres: {}
-#  volume-mattermost-app-config: {}
-#  volume-mattermost-app-data: {}
-#  volume-mattermost-app-logs: {}
-#  volume-mattermost-app-plugins: {}
-
 services:
 
   hydra-migrate:
@@ -72,8 +60,17 @@ services:
       - OAUTH2_ISSUER_URL=$PROTOCOL://$HOST:$PORT
       - OAUTH2_SHARE_ERROR_DEBUG=1
       - OAUTH2_ERROR_URL=$PROTOCOL://$HOST:$PORT/auth/error
+      - AUTH_CODE_LIFESPAN=24h
+      - ID_TOKEN_LIFESPAN=24h
+      - ACCESS_TOKEN_LIFESPAN=24h
+      - REFRESH_TOKEN_LIFESPAN=720h
+      - LOGIN_CONSENT_REQUEST_LIFESPAN=15m
       - ISSUER_URL=$PROTOCOL://$HOST:$PORT
-      - HTTPS_ALLOW_TERMINATION_FROM=0.0.0.0/0
+      - HTTPS_ALLOW_TERMINATION_FROM=172.18.0.16/24
+#      - HTTPS_TLS_CERT_PATH=/etc/certs/dwd_tudelft_nl.csr
+#      - HTTPS_TLS_KEY_PATH=/etc/certs/dwd_tudelft_nl.key
+    volumes:
+      - /etc/ssl/certs:/etc/certs
     restart: on-failure
 
 #  oathkeeper-proxy:
@@ -114,38 +111,39 @@ services:
 
 
   ambassador:
-    image: quay.io/datawire/ambassador:0.38.0
+    image: quay.io/datawire/ambassador:0.40.2
+    container_name: ambassador
     ports:
-    - 80:80
-    - 443:443
+      - 80:80
+      - 443:443
     volumes:
-    - ./config:/ambassador/ambassador-config
-    - ./etc/ssl/certs:/etc/certs
+      - ./config/ambassador:/ambassador/ambassador-config
+      - /etc/ssl/certs:/etc/certs
 
-  oathkeeper-api:
-    image: oryd/oathkeeper:$OATHKEEPER_VERSION
-    container_name: oathkeeper-api
-    ports:
-      - 4456:4456
-    depends_on:
-      - hydra-migrate
-    command:
-      serve api
-    environment:
-      - LOG_LEVEL=$LOG_LEVEL
-      - PORT=4456
-      - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
-      - ISSUER_URL=http://$PORT:$HOST
-      - AUTHORIZER_KETO_WARDEN_KETO_URL=http://keto:4466
-      - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
-      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
-      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_ADMIN_URL=http://hydra:4445
-      - CREDENTIALS_ISSUER_ID_TOKEN_LIFESPAN=1h
-      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://oathkeeper-api:4456
-      - CREDENTIALS_ISSUER_ID_TOKEN_JWK_REFRESH_INTERVAL=30m
-      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=http://hydra:4445/oauth2/introspect
-      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=http://hydra:4444/oauth2/token
-    restart: on-failure
+#  oathkeeper-api:
+#    image: oryd/oathkeeper:$OATHKEEPER_VERSION
+#    container_name: oathkeeper-api
+#    ports:
+#      - 4456:4456
+#    depends_on:
+#      - hydra-migrate
+#    command:
+#      serve api
+#    environment:
+#      - LOG_LEVEL=$LOG_LEVEL
+#      - PORT=4456
+#      - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+#      - ISSUER_URL=http://$PORT:$HOST
+#      - AUTHORIZER_KETO_WARDEN_KETO_URL=http://keto:4466
+#      - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
+#      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
+#      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_ADMIN_URL=http://hydra:4445
+#      - CREDENTIALS_ISSUER_ID_TOKEN_LIFESPAN=1h
+#      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://oathkeeper-api:4456
+#      - CREDENTIALS_ISSUER_ID_TOKEN_JWK_REFRESH_INTERVAL=30m
+#      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=$PROTOCOL://$HOST:$PORT/oauth2/introspect
+#      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
+#    restart: on-failure
 
   keto:
     image: oryd/keto:$KETO_VERSION
@@ -160,9 +158,9 @@ services:
       - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
       - AUTHENTICATOR_OAUTH2_INTROSPECTION_CLIENT_ID=$KETO_CLIENT_ID
       - AUTHENTICATOR_OAUTH2_INTROSPECTION_CLIENT_SECRET=$KETO_CLIENT_SECRET
-      - AUTHENTICATOR_OAUTH2_INTROSPECTION_TOKEN_URL=http://hydra:4444/oauth2/token
-      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=http://hydra:4445/oauth2/introspect
-      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=http://hydra:4444/oauth2/token
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
+      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=$PROTOCOL://$HOST:$PORT/oauth2/introspect
+      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
     restart: on-failure
 
   configurator:
@@ -177,7 +175,7 @@ services:
     depends_on:
       - hydra
       - keto
-      - oathkeeper-api
+#      - oathkeeper-api
     volumes:
       - ./scripts:/scripts
     environment:
@@ -230,7 +228,7 @@ services:
     image: influxdb
     container_name: influxdb
     volumes:
-      - dcd-data-volume-influxdb:/var/lib/influxdb
+      - /data/influxdb:/var/lib/influxdb
     ports:
       - 8086:8086
       - 8083:8083
@@ -245,7 +243,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQL_SYSTEM_SECRET
     volumes:
-      - dcd-data-volume-mysql:/var/lib/mysql
+      - /data/mysql:/var/lib/mysql
       - ./config/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 3306:3306
@@ -255,15 +253,28 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
-#    ports:
-#      - 3000:3000
     environment:
       - GF_INSTALL_PLUGINS=grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource
       - GF_SERVER_ROOT_URL=$PROTOCOL://$HOST:$PORT/grafana
       - GF_SECURITY_ADMIN_PASSWORD=$GRAFANA_ADMIN_PASS
+      - GF_SERVER_DOMAIN=$HOST
+      - GF_AUTH_GENERIC_OAUTH_ENABLED=true
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=$GRAFANA_OAUTH2_CLIENT_ID
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=$GRAFANA_OAUTH2_CLIENT_SECRET
+      - GF_AUTH_GENERIC_OAUTH_SCOPES=openid profile email dcd:things
+      - GF_AUTH_GENERIC_OAUTH_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth
+      - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
+      - GF_AUTH_GENERIC_OAUTH_API_URL=$PROTOCOL://$HOST:$PORT/userinfo
+      - GF_AUTH_SIGNOUT_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/grafana
+#      - GF_AUTH_GENERIC_OAUTH_TEAM_IDS=1
+#      - GF_AUTH_GENERIC_OAUTH_ALLOWED_ORGANISATIONS=1
+#      - GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP=true
 #      - GF_SERVER_PROTOCOL=$PROTOCOL
-#      - GF_SERVER_CERT_FILE=$SSL_KEY_PATH
-#      - GF_SERVER_CERT_KEY=$SSL_CERT_PATH
+#      - GF_SERVER_CERT_FILE=/etc/certs/dwd_tudelft_nl.crt
+#      - GF_SERVER_CERT_KEY=/etc/certs/dwd_tudelft_nl.key
+    volumes:
+      - /etc/ssl/certs:/etc/certs
+    restart: on-failure
 
   # == == == == == Data-Centric Hub == == == == ==
 
@@ -273,10 +284,38 @@ services:
     build:
       context: ../dcd-auth
       dockerfile: Dockerfile
-    container_name: auth
+    container_name: dcd-auth
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - HTTPS=true
+      - GRAFANA_PASSWORD=admin
+      - PORT=8888
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - CRYPTO_KEY=$CRYPTO_KEY
+      - API_URL=http://dcd-api-http:4478/api
+      - KETO_URL=$PROTOCOL://$HOST:$PORT
+      - HYDRA_ADMIN_URL=http://hydra:4445
+      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
+      - OAUTH2_CLIENT_ID=$AUTH_OAUTH2_CLIENT_ID
+      - OAUTH2_CLIENT_SECRET=$AUTH_OAUTH2_CLIENT_SECRET
+
+  dcd-app-lighting:
+    container_name: dcd-app-lighting
+    build:
+      context: ../dcd-app-lighting
+      dockerfile: Dockerfile
+    environment:
+      - LOG_LEVEL=DEBUG
+      - PORT=8080
+      - EMAIL=jacky@datacentricdesign.org
+      - PASSWORD=iot2019!
+      - THING_ID=wim-crouwel-8d0e
+      - THING_TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NTQzOTM1NDAsImV4cCI6MTg2OTk3MzE0MCwiYXVkIjoiaHR0cHM6Ly9kd2QudHVkZWxmdC5ubDo0NDMvYXBpIn0.Hqe5YmasAWxKwD5esae9gGDfbYjBhHyAyV8uROxKbxz5n29OyjG5nnvyLCBG5kOp73ebKe83Aa-HSqxadZ8whQHnFl86P24sw-KhAIU-kc6vr2xGgK1IndyQQ3VWDPDxVP1ithwfSbrh1WygxNVohkz8fqXjzOitRgL5ea4aLDfrotWthfdSy_L2Hom15tzCPQZNrFSCxkyDxilaS_j7qwh-2p9iHOjUhjOioHh9iIYDqK9JATJLTgdrypoMLIDSpjpTpvKC61mYc-ImTrJyvczOu8FSm1tYy3ePg6CYY3_9hw_Y1FADy3FD-8M9LfuwOYnsF8mefhpqqNHgv6EbUDNiJQe4T73zLRE8lkrBtCBlyWoHtsborrUhb2NBTifK3eYvtJzWB1-pKykaezwuD4KA7923XILD46KflaCfsDmYYw0JatJk1zrY0fBQl90shFxLovjUN58qkV_yhMoBklCbjLymlg1aY8tnMXG1VQOhhD7IH8Ca0N0w7mZiSqq7EVepikCzhYEwduxv1Ag1nx9jMxya6aQ1bgOdZgOtMZS0hxsMpeOjZmQG0iXCguTOBL2WSuP-MzhK5Ci39Wr7USLJ5tMWHzhdRkR7wF3r4PhjUTbnzDCa1L-QH6BuyMmWYVv1sX1ABXBp17loC-Gz6CWvReQf1qIoGGlcZGti1-g
+      - MQTT_HOST=dcd-api-mqtt
+      - MQTT_PORT=8883
+      - MQTT_CLIENT_USER=wim-crouwel-8d0e
+      - MQTT_CLIENT_PASS=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NTQzOTM1NDAsImV4cCI6MTg2OTk3MzE0MCwiYXVkIjoiaHR0cHM6Ly9kd2QudHVkZWxmdC5ubDo0NDMvYXBpIn0.Hqe5YmasAWxKwD5esae9gGDfbYjBhHyAyV8uROxKbxz5n29OyjG5nnvyLCBG5kOp73ebKe83Aa-HSqxadZ8whQHnFl86P24sw-KhAIU-kc6vr2xGgK1IndyQQ3VWDPDxVP1ithwfSbrh1WygxNVohkz8fqXjzOitRgL5ea4aLDfrotWthfdSy_L2Hom15tzCPQZNrFSCxkyDxilaS_j7qwh-2p9iHOjUhjOioHh9iIYDqK9JATJLTgdrypoMLIDSpjpTpvKC61mYc-ImTrJyvczOu8FSm1tYy3ePg6CYY3_9hw_Y1FADy3FD-8M9LfuwOYnsF8mefhpqqNHgv6EbUDNiJQe4T73zLRE8lkrBtCBlyWoHtsborrUhb2NBTifK3eYvtJzWB1-pKykaezwuD4KA7923XILD46KflaCfsDmYYw0JatJk1zrY0fBQl90shFxLovjUN58qkV_yhMoBklCbjLymlg1aY8tnMXG1VQOhhD7IH8Ca0N0w7mZiSqq7EVepikCzhYEwduxv1Ag1nx9jMxya6aQ1bgOdZgOtMZS0hxsMpeOjZmQG0iXCguTOBL2WSuP-MzhK5Ci39Wr7USLJ5tMWHzhdRkR7wF3r4PhjUTbnzDCa1L-QH6BuyMmWYVv1sX1ABXBp17loC-Gz6CWvReQf1qIoGGlcZGti1-g
+
 
   dcd-api-http:
 #    image: datacentricdesign/dcd-api-http:
@@ -287,21 +326,26 @@ services:
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - PORT=4478
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
       - CRYPTO_KEY=$CRYPTO_KEY
       - MODEL_HOST=$HOST
       - KAFKA=true
       - HTTPS=true
-      - KAFKA_HOST=$HOST
+      - GRAFANA_PASSWORD=admin
+      - KAFKA_HOST=kafka
       - KAFKA_PORT=$KAFKA_PORT
       - API_URL=$PROTOCOL://$HOST:$PORT/api
-      - KETO_URL=http://keto:4466
+      - KETO_URL=$PROTOCOL://$HOST:$PORT
       - HYDRA_ADMIN_URL=http://hydra:4445
-      - HYDRA_URL=http://hydra:4444
+      - HYDRA_URL=$PROTOCOL://$HOST:$PORT
       - OATHKEEPER_KEY_URL=http://oathkeeper-api:4456/.well-known/jwks.json
-      - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
-      - OAUTH2_CLIENT_ID=$API_OAUTH2_CLIENT_ID
-      - OAUTH2_CLIENT_SECRET=$API_OAUTH2_CLIENT_SECRET
-      - OAUTH2_INTROSPECT_URL=http://hydra:4445/oauth2/introspect
+      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
+      - OAUTH2_CLIENT_ID=$API_HTTP_OAUTH2_CLIENT_ID
+      - OAUTH2_CLIENT_SECRET=$API_HTTP_OAUTH2_CLIENT_SECRET
+      - OAUTH2_INTROSPECT_URL=$PROTOCOL://$HOST:$PORT/oauth2/introspect
+    volumes:
+      - /data/files:/usr/src/app/files
+
 
   dcd-api-mqtt:
 #    image: datacentricdesign/dcd-api-mqtt:
@@ -309,10 +353,28 @@ services:
       context: ../dcd-api-mqtt
       dockerfile: Dockerfile
     container_name: dcd-api-mqtt
+    ports:
+      - 8883:8883
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - HTTPS=true
-
+      - GRAFANA_PASSWORD=admin
+      - MQTT_HOST=0.0.0.0
+      - MQTT_PORT=8883
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - CRYPTO_KEY=$CRYPTO_KEY
+      - KAFKA=true
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=$KAFKA_PORT
+      - OAUTH2_CLIENT_ID=$API_MQTT_OAUTH2_CLIENT_ID
+      - OAUTH2_CLIENT_SECRET=$API_MQTT_OAUTH2_CLIENT_SECRET
+      - MODEL_HOST=$HOST
+      - API_URL=$PROTOCOL://$HOST:$PORT/api
+      - KETO_URL=$PROTOCOL://$HOST:$PORT
+      - HYDRA_ADMIN_URL=$PROTOCOL://$HOST:$PORT
+      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token      
+      - MQTT_CLIENT_USER=$MQTT_CLIENT_ID
+      - MQTT_CLIENT_PASS=$MQTT_CLIENT_SECRET
 
   dcd-store-influxdb:
 #    image: datacentricdesign/dcd-store-influxdb:
@@ -320,6 +382,16 @@ services:
       context: ../dcd-store-influxdb
       dockerfile: Dockerfile
     container_name: dcd-store-influxdb
+    environment:
+      - LOG_LEVEL=INFO
+      - INFLUXDB_HOST=influxdb
+      - INFLUXDB_NAME=dcdhub
+      - HTTPS=true
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - CRYPTO_KEY=$CRYPTO_KEY
+      - KAFKA=true
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=$KAFKA_PORT
 
   dcd-web-ui:
 #    image: datacentricdesign/dcd-web-ui:
@@ -330,6 +402,18 @@ services:
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - HTTPS=true
+      - PORT=3000
+      - BASE_URL=/manager
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - SERVER_URL=$PROTOCOL://$HOST:$PORT
+      - OAUTH2_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth
+      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
+      - OAUTH2_CLIENT_ID=$UI_OAUTH2_CLIENT_ID
+      - OAUTH2_CLIENT_SECRET=$UI_OAUTH2_CLIENT_SECRET
+      - OAUTH2_PROFILE=$PROTOCOL://$HOST:$PORT/userinfo
+      - OAUTH2_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/manager/auth/callback
+      - BACKEND_OATHKEEPER_URL=http://oathkeeper-api:4466/oathkeeper
+      - API_URL=$PROTOCOL://$HOST:$PORT/api
 
 
 #  dcd-website:
@@ -340,10 +424,27 @@ services:
 #    image: datacentricdesign/dcd-proxy:
 #    container_name: dcd-proxy
 #    ports:
-#      - 80:80
+#      - 443:443
 #    environment:
-#      - PORT=80
-#      - SSL=false
+#      - PORT=443
+#      - SSL=true
 #      - SSL_KEY_PATH=$SSL_KEY_PATH
 #      - SSL_CERT_PATH=$SSL_CERT_PATH
 #      - SSL_REDIRECT_PORT=$SSL_REDIRECT_PORT
+
+
+
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: dwd.tudelft.nl
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_PTRACE
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 19999:19999

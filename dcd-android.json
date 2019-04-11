@@ -1,0 +1,20 @@
+{
+  "client_id": "dcd-android",
+  "subject_type": "public",
+  "description": "Android App to collect data.",
+  "client_name": "DCD Hub Android",
+  "scope": "openid offline email profile dcd:public dcd:things dcd:persons",
+  "grant_types": [
+    "authorization_code",
+    "refresh_token"
+  ],
+  "response_types": [
+    "code",
+    "id_token"
+  ],
+  "token_endpoint_auth_method": "client_secret_post",
+  "redirect_uris": [
+    "nl.tudelft.ide.de.iot.iosense:/oauth2redirect"
+  ]
+}
+

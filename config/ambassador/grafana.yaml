@@ -1,0 +1,6 @@
+apiVersion: ambassador/v0
+kind:  Mapping
+name:  grafana_mapping
+prefix: /grafana/
+rewrite: /
+service: grafana:3000

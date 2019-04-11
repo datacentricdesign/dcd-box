@@ -1,7 +1,6 @@
 apiVersion: ambassador/v0
-kind:  AuthService
-name:  authentication
-auth_service: ory-oathkeeper
-path_prefix: /judge
-allowed_headers:
-- Authorization
+kind:  Mapping
+name:  auth_mapping
+prefix: /auth
+rewrite: /auth
+service: dcd-auth:8888

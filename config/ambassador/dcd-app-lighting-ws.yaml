@@ -1,0 +1,8 @@
+apiVersion: ambassador/v0
+kind:  Mapping
+name:  lighting_ws_app_mapping
+prefix: /ws
+rewrite: /ws
+timeout_ms: 10000
+service: dcd-app-lighting:8080
+use_websocket: true

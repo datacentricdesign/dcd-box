@@ -30,15 +30,6 @@ services:
       migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
     restart: on-failure
 
-
-  postgresd:
-    image: postgres:9.6
-    container_name: postgres
-    environment:
-      - POSTGRES_USER=$AC_DB_USER
-      - POSTGRES_PASSWORD=$AC_DB_PASSWORD
-      - POSTGRES_DB=$AC_DB
-
   hydra:
     image: oryd/hydra:$HYDRA_VERSION
     container_name: hydra
@@ -72,6 +63,14 @@ services:
     volumes:
       - /etc/ssl/certs:/etc/certs
     restart: on-failure
+
+  postgresd:
+    image: postgres:9.6
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=$AC_DB_USER
+      - POSTGRES_PASSWORD=$AC_DB_PASSWORD
+      - POSTGRES_DB=$AC_DB
 
 #  oathkeeper-proxy:
 #    image: oryd/oathkeeper:$OATHKEEPER_VERSION
@@ -372,7 +371,7 @@ services:
       - API_URL=$PROTOCOL://$HOST:$PORT/api
       - KETO_URL=$PROTOCOL://$HOST:$PORT
       - HYDRA_ADMIN_URL=$PROTOCOL://$HOST:$PORT
-      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token      
+      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
       - MQTT_CLIENT_USER=$MQTT_CLIENT_ID
       - MQTT_CLIENT_PASS=$MQTT_CLIENT_SECRET
 
@@ -448,3 +447,4 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - 19999:19999
+

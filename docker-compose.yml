@@ -402,7 +402,7 @@ services:
       - LOG_LEVEL=$LOG_LEVEL
       - HTTPS=true
       - PORT=3000
-      - BASE_URL=/manager
+      - BASE_URL=/hub
       - NODE_TLS_REJECT_UNAUTHORIZED=0
       - SERVER_URL=$PROTOCOL://$HOST:$PORT
       - OAUTH2_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth

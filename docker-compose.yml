@@ -414,10 +414,11 @@ services:
       - BACKEND_OATHKEEPER_URL=http://oathkeeper-api:4466/oathkeeper
       - API_URL=$PROTOCOL://$HOST:$PORT/api
 
-
-#  dcd-website:
-#    image: datacentricdesign/dcd-website:
-#    container_name: dcd-website
+  dcd-website:
+    build:
+      context: ../dcd-website
+      dockerfile: Dockerfile
+    container_name: dcd-website
 
 #  dcd-proxy:
 #    image: datacentricdesign/dcd-proxy:

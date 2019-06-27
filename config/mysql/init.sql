@@ -33,6 +33,15 @@ CREATE TABLE IF NOT EXISTS `things` (
   ENGINE = INNODB
   DEFAULT CHARSET = LATIN1;
 
+CREATE TABLE IF NOT EXISTS `interactions` (
+  `id`            VARCHAR(100) NOT NULL UNIQUE,
+  `entity_id_1`   VARCHAR(100) NOT NULL,
+  `entity_id_2`   VARCHAR(100) NOT NULL,
+  CONSTRAINT `pk_interactions_id` PRIMARY KEY (`id`)
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = LATIN1;
+
 CREATE TABLE IF NOT EXISTS `properties` (
   `id`              VARCHAR(100)     NOT NULL,
   `index_id`        INT(11) UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,

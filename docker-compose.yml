@@ -58,6 +58,7 @@ services:
       - LOGIN_CONSENT_REQUEST_LIFESPAN=15m
       - ISSUER_URL=$PROTOCOL://$HOST:$PORT
       - HTTPS_ALLOW_TERMINATION_FROM=172.18.0.16/24
+      - CORS_ALLOWED_ORIGINS=http://localhost:4200
 #      - HTTPS_TLS_CERT_PATH=/etc/certs/dwd_tudelft_nl.csr
 #      - HTTPS_TLS_KEY_PATH=/etc/certs/dwd_tudelft_nl.key
     volumes:
@@ -414,24 +415,31 @@ services:
       - BACKEND_OATHKEEPER_URL=http://oathkeeper-api:4466/oathkeeper
       - API_URL=$PROTOCOL://$HOST:$PORT/api
 
+  dcd-data-subject:
+    build:
+      context: ../dcd-data-subject
+      dockerfile: Dockerfile
+    container_name: dcd-data-subject
+    environment:
+      - LOG_LEVEL=$LOG_LEVEL
+      - HTTPS=true
+      - PORT=8080
+      - BASE_URL=/subject
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - SERVER_URL=$PROTOCOL://$HOST:$PORT
+      - OAUTH2_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth
+      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
+      - OAUTH2_CLIENT_ID=$DATA_SUBJECT_OAUTH2_CLIENT_ID
+      - OAUTH2_CLIENT_SECRET=$DATA_SUBJECT_OAUTH2_CLIENT_SECRET
+      - OAUTH2_PROFILE=$PROTOCOL://$HOST:$PORT/userinfo
+      - OAUTH2_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/subject/auth/callback
+      - API_URL=$PROTOCOL://$HOST:$PORT/api
+
   dcd-website:
     build:
       context: ../dcd-website
       dockerfile: Dockerfile
     container_name: dcd-website
-
-#  dcd-proxy:
-#    image: datacentricdesign/dcd-proxy:
-#    container_name: dcd-proxy
-#    ports:
-#      - 443:443
-#    environment:
-#      - PORT=443
-#      - SSL=true
-#      - SSL_KEY_PATH=$SSL_KEY_PATH
-#      - SSL_CERT_PATH=$SSL_CERT_PATH
-#      - SSL_REDIRECT_PORT=$SSL_REDIRECT_PORT
-
 
 
   netdata:

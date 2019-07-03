@@ -434,6 +434,7 @@ services:
       - OAUTH2_PROFILE=$PROTOCOL://$HOST:$PORT/userinfo
       - OAUTH2_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/subject/auth/callback
       - API_URL=$PROTOCOL://$HOST:$PORT/api
+      - MAPS_KEY=$MAPS_KEY
 
   dcd-website:
     build:

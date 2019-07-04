@@ -406,7 +406,7 @@ services:
       - KAFKA_HOST=kafka
       - KAFKA_PORT=$KAFKA_PORT
       - CHECK_ACTIVITY_COUNT=60000
-      - AUTH_ENABLED=FASLE
+      - AUTH_ENABLED=false
 
   dcd-web-ui:
 #    image: datacentricdesign/dcd-web-ui:

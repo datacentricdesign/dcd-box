@@ -399,7 +399,7 @@ services:
       dockerfile: Dockerfile
     container_name: dcd-processor
     environment:
-      - LOG_LEVEL=INFO
+      - LOG_LEVEL=DEBUG
       - HTTPS=true
       - CRYPTO_KEY=$CRYPTO_KEY
       - KAFKA=true

@@ -393,6 +393,20 @@ services:
       - KAFKA_HOST=kafka
       - KAFKA_PORT=$KAFKA_PORT
 
+  dcd-processor:
+    build:
+      context: ../dcd-processor
+      dockerfile: Dockerfile
+    container_name: dcd-processor
+    environment:
+      - LOG_LEVEL=INFO
+      - HTTPS=true
+      - CRYPTO_KEY=$CRYPTO_KEY
+      - KAFKA=true
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=$KAFKA_PORT
+      - CHECK_ACTIVITY_COUNT=60000
+
   dcd-web-ui:
 #    image: datacentricdesign/dcd-web-ui:
     build:

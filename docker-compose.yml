@@ -248,6 +248,24 @@ services:
     ports:
       - 3306:3306
 
+  # == == == == == Logging == == == == ==
+
+  logspout:
+    image: bekt/logspout-logstash
+    restart: on-failure
+    environment:
+      ROUTE_URIS: logstash://logstash:5000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  logstash:
+    image: logstash:7.2
+    command: -f /opt/logstash/logstash.conf
+    volumes:
+      - ./config/logs:/opt/logstash
+      - /data/logs:/var/log/logstash
+
+
   # == == == == == Services == == == == ==
 
   grafana:

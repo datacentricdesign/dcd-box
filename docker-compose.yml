@@ -260,7 +260,7 @@ services:
 
   logstash:
     image: logstash:7.2.0
-    command: -f /opt/logstash/logstash.conf
+    command: bin/logstash -f /opt/logstash/logstash.conf
     volumes:
       - ./config/logs:/opt/logstash
       - /data/logs:/var/log/logstash

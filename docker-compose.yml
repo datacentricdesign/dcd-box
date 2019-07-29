@@ -252,6 +252,7 @@ services:
 
   logspout:
     image: bekt/logspout-logstash
+    container_name: logspout
     restart: on-failure
     environment:
       ROUTE_URIS: logstash://logstash:5000
@@ -259,10 +260,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   logstash:
+    container_name: logstash
     image: logstash:7.2.0
     command: bin/logstash -f /opt/logstash/logstash.conf
     volumes:
-      - ./config/logs:/opt/logstash
+      - ./config/logs/logstash.conf:/opt/logstash/logstash.conf
       - /data/logs:/var/log/logstash
 
 

@@ -119,6 +119,9 @@ services:
     volumes:
       - ./config/ambassador:/ambassador/ambassador-config
       - /etc/ssl/certs:/etc/certs
+    environment:
+      # don't try to watch Kubernetes for configuration changes
+      - AMBASSADOR_NO_KUBEWATCH=no_kubewatch
 
 #  oathkeeper-api:
 #    image: oryd/oathkeeper:$OATHKEEPER_VERSION

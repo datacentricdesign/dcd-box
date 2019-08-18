@@ -1,6 +1,6 @@
-# dcd-hub
+# Data-Centric Design Hub
 
-Designer's Data Hub
+Deployment repository of the Data-Centric Design Hub (https://datacentricdesign.org)
 
 Requirements:
 

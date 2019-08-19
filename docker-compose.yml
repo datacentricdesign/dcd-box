@@ -3,7 +3,7 @@ version: '3'
 services:
 
   hydra-migrate:
-    image: oryd/hydra:$HYDRA_VERSION
+    image: $HYDRA_VERSION
     container_name: hydra-migrate
     environment:
       - LOG_LEVEL=$LOG_LEVEL
@@ -13,7 +13,7 @@ services:
     restart: on-failure
 
   keto-migrate:
-    image: oryd/keto:$KETO_VERSION
+    image: $KETO_VERSION
     container_name: keto-migrate
     environment:
       - LOG_LEVEL=$LOG_LEVEL
@@ -22,7 +22,7 @@ services:
     restart: on-failure
 
   hydra:
-    image: oryd/hydra:$HYDRA_VERSION
+    image: $HYDRA_VERSION
     container_name: hydra
     ports:
       - 4444:4444
@@ -75,7 +75,7 @@ services:
       - AMBASSADOR_NO_KUBEWATCH=no_kubewatch
 
   keto:
-    image: oryd/keto:$KETO_VERSION
+    image: $KETO_VERSION
     container_name: keto
     ports:
       - 4466:4466

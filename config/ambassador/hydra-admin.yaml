@@ -1,0 +1,8 @@
+apiVersion: ambassador/v0
+kind:  Mapping
+name:  hydra_admin_mapping
+prefix: /admin/hydra/
+rewrite: /
+add_request_headers:
+  X-Forwarded-Proto: "https"
+service: hydra:4445

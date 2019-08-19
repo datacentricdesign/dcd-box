@@ -8,12 +8,30 @@ Requirements:
 
 https://docs.docker.com/install/linux/docker-ce/centos/
 
-
 # Deployment
+
+Create a folder for the system and a folder for the data.
+
+```shell script
+mkdir dcd
+mkdir data
+```
+
+## SSL certificate
+Request a SSL certificate from your system administrator and place the following
+files in /etc/ssl/certs/
+
+- DigiCertCA.crt
+- your-domain.crt
+- your-domain.key
+- your-domain.pem
+
+## Clone dcd-hub
 
 Clone the repository and step into the directory.
 
 ```shell script
+cd dcd
 git clone https://github.com/datacentricdesign/dcd-hub.git
 cd dcd-hub
 ```

@@ -9,7 +9,7 @@ services:
       - LOG_LEVEL=$LOG_LEVEL
       - HYDRA_SYSTEM_SECRET=$HYDRA_SYSTEM_SECRET
     command:
-      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable --yes
     restart: on-failure
 
   keto-migrate:
@@ -18,7 +18,7 @@ services:
     environment:
       - LOG_LEVEL=$LOG_LEVEL
     command:
-      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable --yes
     restart: on-failure
 
   hydra:

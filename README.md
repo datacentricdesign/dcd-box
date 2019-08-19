@@ -8,6 +8,10 @@ Requirements:
 
 https://docs.docker.com/install/linux/docker-ce/centos/
 
+Then, post install:
+
+https://docs.docker.com/install/linux/linux-postinstall/
+
 # Deployment
 
 Create a folder for the system and a folder for the data.

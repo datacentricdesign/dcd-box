@@ -34,7 +34,7 @@ services:
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - SECRETS_SYSTEM=$HYDRA_SYSTEM_SECRET
-      - DNS=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+      - DSN=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
       - OAUTH2_CONSENT_URL=$PROTOCOL://$HOST:$PORT/auth/consent
       - OAUTH2_LOGIN_URL=$PROTOCOL://$HOST:$PORT/auth/signin
       - OAUTH2_LOGOUT_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/

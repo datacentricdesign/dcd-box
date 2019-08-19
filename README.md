@@ -36,6 +36,12 @@ git clone https://github.com/datacentricdesign/dcd-hub.git
 cd dcd-hub
 ```
 
+Then checkout the release or the development version you are looking for.
+
+```shell script
+git checkout release/0.0.1
+```
+
 Copy and adapt the config with nano: change the host with your domain,
 and choose secrets for all 'SECRET-TO-CHANGE' mention.
 
@@ -51,6 +57,21 @@ git flow release start RELEASE [BASE]
 git flow release publish RELEASE 
 git flow release finish RELEASE 
 git push origin --tags
+```
+
+# Adding Clients
+
+```shell script
+docker run --rm -it   -e HYDRA_ADMIN_URL=https://your-domain:443
+ \ oryd/hydra:v1.0.0
+ \ clients create --skip-tls-verify
+ \ --id dcd-app-data-subject  --secret  SECRET-TO-CHANGE
+ \ --name "DCD - Data Subject"
+ \ --grant-types authorization_code,refresh_token
+ \ --response-types token,code,id_token
+ \ --scope openid,offline,profile,dcd:public,dcd:things,dcd:persons
+ \ --callbacks https://dwd.tudelft.nl:443/subject/auth/callback
+ \ --token-endpoint-auth-method client_secret_post
 ```
 
 # Changelog

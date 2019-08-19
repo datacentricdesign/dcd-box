@@ -1,0 +1,8 @@
+{
+  "client_id": "${AUTH_CLIENT_ID}",
+  "description": "Auth module of the Data Centric Design Hub.",
+  "client_secret": "${AUTH_CLIENT_SECRET}",
+  "scope": "dcd:auth",
+  "grant_types": ["client_credentials", "refresh_token"],
+  "response_types": ["token"]
+}

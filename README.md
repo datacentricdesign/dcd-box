@@ -9,6 +9,15 @@ Requirements:
 https://docs.docker.com/install/linux/docker-ce/centos/
 
 
+# For release:
+
+```shell script
+git flow release start RELEASE [BASE] 
+git flow release publish RELEASE 
+git flow release finish RELEASE 
+git push origin --tags
+```
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

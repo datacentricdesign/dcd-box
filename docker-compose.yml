@@ -222,11 +222,11 @@ services:
   # == == == == == Data-Centric Hub - APIs == == == == ==
 
   dcd-api-http:
-#    image: datacentricdesign/dcd-api-http:
+    image: datacentricdesign/dcd-api-http:latest
     container_name: dcd-api-http
-    build:
-      context: ../dcd-api-http
-      dockerfile: Dockerfile
+#    build:
+#      context: ../dcd-api-http
+#      dockerfile: Dockerfile
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - PORT=4478
@@ -251,10 +251,10 @@ services:
       - /data/files:/usr/src/app/files
 
   dcd-api-mqtt:
-#    image: datacentricdesign/dcd-api-mqtt:
-    build:
-      context: ../dcd-api-mqtt
-      dockerfile: Dockerfile
+    image: datacentricdesign/dcd-api-mqtt:latest
+#    build:
+#      context: ../dcd-api-mqtt
+#      dockerfile: Dockerfile
     container_name: dcd-api-mqtt
     ports:
       - 8883:8883
@@ -283,10 +283,10 @@ services:
   # == == == == == Data-Centric Hub - Stores == == == == ==
 
   dcd-store-influxdb:
-#    image: datacentricdesign/dcd-store-influxdb:
-    build:
-      context: ../dcd-store-influxdb
-      dockerfile: Dockerfile
+    image: datacentricdesign/dcd-store-influxdb:latest
+#    build:
+#      context: ../dcd-store-influxdb
+#      dockerfile: Dockerfile
     container_name: dcd-store-influxdb
     environment:
       - LOG_LEVEL=INFO
@@ -302,10 +302,10 @@ services:
   # == == == == == Data-Centric Hub - Web Portals == == == == ==
 
   dcd-auth:
-    #    image: datacentricdesign/dcd-auth:
-    build:
-      context: ../dcd-auth
-      dockerfile: Dockerfile
+    image: datacentricdesign/dcd-auth:latest
+#    build:
+#      context: ../dcd-auth
+#      dockerfile: Dockerfile
     container_name: dcd-auth
     environment:
       - LOG_LEVEL=$LOG_LEVEL
@@ -322,9 +322,10 @@ services:
       - OAUTH2_CLIENT_SECRET=$AUTH_OAUTH2_CLIENT_SECRET
 
   dcd-data-subject:
-    build:
-      context: ../dcd-data-subject
-      dockerfile: Dockerfile
+    image: datacentricdesign/dcd-data-subject:latest
+#    build:
+#      context: ../dcd-data-subject
+#      dockerfile: Dockerfile
     container_name: dcd-data-subject
     environment:
       - LOG_LEVEL=$LOG_LEVEL
@@ -343,17 +344,19 @@ services:
       - MAPS_KEY=$MAPS_KEY
 
   dcd-website:
-    build:
-      context: ../dcd-website
-      dockerfile: Dockerfile
+    image: datacentricdesign/dcd-website:latest
+#    build:
+#      context: ../dcd-website
+#      dockerfile: Dockerfile
     container_name: dcd-website
 
   # == == == == == Data-Centric Hub - Processors == == == == ==
 
   dcd-processor:
-    build:
-      context: ../dcd-processor
-      dockerfile: Dockerfile
+    image: datacentricdesign/dcd-processor:latest
+#    build:
+#      context: ../dcd-processor
+#      dockerfile: Dockerfile
     container_name: dcd-processor
     environment:
       - LOG_LEVEL=DEBUG

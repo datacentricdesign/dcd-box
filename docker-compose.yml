@@ -97,7 +97,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - HYDRA_VERSION=$HYDRA_VERSION
+        - HYDRA_VERSION=v1.0.0
         - KETO_VERSION=$KETO_VERSION
     container_name: configurator
     depends_on:

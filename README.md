@@ -36,7 +36,8 @@ git clone https://github.com/datacentricdesign/dcd-hub.git
 cd dcd-hub
 ```
 
-Copy and adapt the config with nano.
+Copy and adapt the config with nano: change the host with your domain,
+and choose secrets for all 'SECRET-TO-CHANGE' mention.
 
 ```shell script
 cp config/default.env .env

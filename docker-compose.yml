@@ -96,10 +96,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - HYDRA_VERSION=$HYDRA_VERSION
-        - KETO_VERSION=$KETO_VERSION
-#        - OATHKEEPER_VERSION=$OATHKEEPER_VERSION
     container_name: configurator
     depends_on:
       - hydra
@@ -107,6 +103,9 @@ services:
     volumes:
       - ./scripts:/scripts
     environment:
+      - HYDRA_VERSION=$HYDRA_VERSION
+      - KETO_VERSION=$KETO_VERSION
+
       # All of these URLs MUST NOT end with a trailing slash. This is very important!
       - HYDRA_URL=http://hydra:4444
       - HYDRA_ADMIN_URL=http://hydra:4445

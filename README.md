@@ -41,10 +41,13 @@ cp config/default.env .env
 nano .env
 ```
 
+You will also need to replace the MAPS_API with your own Google Maps API to load
+maps in applications.
+
 ## SSL certificate
 
-Request a SSL certificate from your system administrator and place the following
-files in /etc/ssl/certs/
+Request a SSL certificate from your system administrator. You will need to 
+ provide them with a CSR file. Then, place the provided files in /etc/ssl/certs/
 
 - DigiCertCA.crt
 - dcd-hub.crt

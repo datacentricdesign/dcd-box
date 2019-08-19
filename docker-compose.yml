@@ -99,7 +99,7 @@ services:
       args:
         - HYDRA_VERSION=$HYDRA_VERSION
         - KETO_VERSION=$KETO_VERSION
-        - OATHKEEPER_VERSION=$OATHKEEPER_VERSION
+#        - OATHKEEPER_VERSION=$OATHKEEPER_VERSION
     container_name: configurator
     depends_on:
       - hydra
@@ -111,8 +111,8 @@ services:
       - HYDRA_URL=http://hydra:4444
       - HYDRA_ADMIN_URL=http://hydra:4445
       - KETO_URL=http://keto:4466
-      - OATHKEEPER_API_URL=http://oathkeeper-api:4456
-      - OATHKEEPER_PROXY_URL=$PROTOCOL://$HOST:$PORT
+#      - OATHKEEPER_API_URL=http://oathkeeper-api:4456
+#      - OATHKEEPER_PROXY_URL=$PROTOCOL://$HOST:$PORT
 
       # This sets the prefix for all resource, action, and subject names.
       # Be aware that this prefix is automatically applied to all OAuth2 Clients as well.
@@ -124,9 +124,9 @@ services:
       - "KETO_RESOURCE_PREFIX=resources:keto:"
       - "KETO_ACTION_PREFIX=actions:keto:"
 
-      - OATHKEEPER_HYDRA_JWK_SET_ID=jwk:oathkeeper
-      - OATHKEEPER_HYDRA_CLIENT_ID=$OATHKEEPER_CLIENT_ID
-      - OATHKEEPER_HYDRA_CLIENT_SECRET=$OATHKEEPER_CLIENT_SECRET
+#      - OATHKEEPER_HYDRA_JWK_SET_ID=jwk:oathkeeper
+#      - OATHKEEPER_HYDRA_CLIENT_ID=$OATHKEEPER_CLIENT_ID
+#      - OATHKEEPER_HYDRA_CLIENT_SECRET=$OATHKEEPER_CLIENT_SECRET
       - KETO_HYDRA_CLIENT_ID=$KETO_CLIENT_ID
       - KETO_HYDRA_CLIENT_SECRET=$KETO_CLIENT_SECRET
     restart: on-failure
@@ -272,9 +272,8 @@ services:
       - KETO_URL=$PROTOCOL://$HOST:$PORT
       - HYDRA_ADMIN_URL=$PROTOCOL://$HOST:$PORT
       - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
-      - MQTT_CLIENT_USER=$MQTT_CLIENT_ID
-      - MQTT_CLIENT_PASS=$MQTT_CLIENT_SECRET
-
+      - MQTT_CLIENT_USER=$API_MQTT_CLIENT_ID
+      - MQTT_CLIENT_PASS=$API_MQTT_CLIENT_SECRET
 
   # == == == == == Data-Centric Hub - Stores == == == == ==
 

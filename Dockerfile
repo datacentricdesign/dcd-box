@@ -1,8 +1,8 @@
 ARG HYDRA_VERSION
 ARG KETO_VERSION
 
-FROM oryd/hydra:v1.0.0
-FROM oryd/keto:v0.3.3
+FROM oryd/hydra:$HYDRA_VERSION
+FROM oryd/keto:$KETO_VERSION
 
 FROM alpine:3.10
 

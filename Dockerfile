@@ -4,7 +4,7 @@ ARG OATHKEEPER_VERSION
 
 FROM oryd/hydra:$HYDRA_VERSION
 FROM oryd/keto:$KETO_VERSION
-FROM oryd/oathkeeper:$OATHKEEPER_VERSION
+#FROM oryd/oathkeeper:$OATHKEEPER_VERSION
 
 FROM alpine:3.7
 
@@ -22,7 +22,7 @@ RUN pip install --upgrade pip
 
 COPY --from=0 /usr/bin/hydra /usr/bin/hydra
 COPY --from=1 /usr/bin/keto /usr/bin/keto
-COPY --from=2 /usr/bin/oathkeeper /usr/bin/oathkeeper
+#COPY --from=2 /usr/bin/oathkeeper /usr/bin/oathkeeper
 
 RUN pip install supervisor-stdout
 

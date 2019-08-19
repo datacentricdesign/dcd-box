@@ -17,15 +17,6 @@ mkdir dcd
 mkdir data
 ```
 
-## SSL certificate
-Request a SSL certificate from your system administrator and place the following
-files in /etc/ssl/certs/
-
-- DigiCertCA.crt
-- your-domain.crt
-- your-domain.key
-- your-domain.pem
-
 ## Clone dcd-hub
 
 Clone the repository and step into the directory.
@@ -49,6 +40,16 @@ and choose secrets for all 'SECRET-TO-CHANGE' mention.
 cp config/default.env .env
 nano .env
 ```
+
+## SSL certificate
+
+Request a SSL certificate from your system administrator and place the following
+files in /etc/ssl/certs/
+
+- DigiCertCA.crt
+- dcd-hub.crt
+- dcd-hub.key
+- dcd-hub.pem
 
 # For release
 

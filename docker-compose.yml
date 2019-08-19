@@ -51,7 +51,7 @@ services:
       - CORS_ALLOWED_ORIGINS=http://localhost:4200
     volumes:
       - /etc/ssl/certs:/etc/certs
-      - ./config/.hydra:.
+      - ./config/.hydra:/
     restart: on-failure
 
   postgresd:

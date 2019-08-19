@@ -1,10 +1,10 @@
 ARG HYDRA_VERSION
 ARG KETO_VERSION
 
-FROM oryd/hydra:$HYDRA_VERSION
-FROM oryd/keto:$KETO_VERSION
+FROM oryd/hydra:v1.0.0
+FROM oryd/keto:v0.3.3
 
-FROM alpine:3.7
+FROM alpine:3.10
 
 ENV BUILD_DEPS="gettext"  \
     RUNTIME_DEPS="libintl python3 py-pip supervisor bash curl"
@@ -16,11 +16,9 @@ RUN set -x && \
     apk del build_deps
 
 RUN pip install --upgrade pip
-# RUN apk add --no-cache supervisor bash curl
 
 COPY --from=0 /usr/bin/hydra /usr/bin/hydra
 COPY --from=1 /usr/bin/keto /usr/bin/keto
-#COPY --from=2 /usr/bin/oathkeeper /usr/bin/oathkeeper
 
 RUN pip install supervisor-stdout
 

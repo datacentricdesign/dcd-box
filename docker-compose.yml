@@ -3,7 +3,7 @@ version: '3'
 services:
 
   hydra-migrate:
-    image: $HYDRA_VERSION
+    image: oryd/hydra:$HYDRA_VERSION
     container_name: hydra-migrate
     environment:
       - LOG_LEVEL=$LOG_LEVEL
@@ -13,7 +13,7 @@ services:
     restart: on-failure
 
   keto-migrate:
-    image: $KETO_VERSION
+    image: oryd/keto:$KETO_VERSION
     container_name: keto-migrate
     environment:
       - LOG_LEVEL=$LOG_LEVEL
@@ -22,7 +22,7 @@ services:
     restart: on-failure
 
   hydra:
-    image: $HYDRA_VERSION
+    image: oryd/hydra:$HYDRA_VERSION
     container_name: hydra
     ports:
       - 4444:4444
@@ -75,7 +75,7 @@ services:
       - AMBASSADOR_NO_KUBEWATCH=no_kubewatch
 
   keto:
-    image: $KETO_VERSION
+    image: oryd/keto:$KETO_VERSION
     container_name: keto
     ports:
       - 4466:4466
@@ -96,6 +96,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - HYDRA_VERSION=$HYDRA_VERSION
+        - KETO_VERSION=$KETO_VERSION
     container_name: configurator
     depends_on:
       - hydra
@@ -103,9 +106,6 @@ services:
     volumes:
       - ./scripts:/scripts
     environment:
-      - HYDRA_VERSION=$HYDRA_VERSION
-      - KETO_VERSION=$KETO_VERSION
-
       # All of these URLs MUST NOT end with a trailing slash. This is very important!
       - HYDRA_URL=http://hydra:4444
       - HYDRA_ADMIN_URL=http://hydra:4445

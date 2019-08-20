@@ -334,37 +334,3 @@ CREATE TABLE IF NOT EXISTS `entities_roles` (
 )
   ENGINE = INNODB
   DEFAULT CHARSET = LATIN1;
-
-CREATE TABLE IF NOT EXISTS `tasks` (
-  `id`                VARCHAR(100)     NOT NULL,
-  `name`              VARCHAR(100)     NOT NULL,
-  `types`             VARCHAR(500)     NOT NULL,
-  `description`              TEXT          NULL,
-  `from`                BIGINT(15)     NOT NULL,
-  `to`                  BIGINT(15)     NOT NULL,
-  `registered_at`       TIMESTAMP      NOT NULL        DEFAULT CURRENT_TIMESTAMP,
-  `unregistered_at`     TIMESTAMP          NULL                     DEFAULT NULL,
-  `actor_entity_id`   VARCHAR(100)     NOT NULL,
-  CONSTRAINT `pk_tasks` PRIMARY KEY (`id`, `actor_entity_id`)
-)
-  ENGINE = INNODB
-  DEFAULT CHARSET = LATIN1;
-
-CREATE TABLE IF NOT EXISTS `resources` (
-  `id`              VARCHAR(100)     NOT NULL,
-  `task_id`            VARCHAR(100)     NOT NULL,
-  `subject_entity_id`       VARCHAR(100)     NOT NULL,
-  CONSTRAINT `pk_resources` PRIMARY KEY (`id`,`task_id`, `subject_entity_id`)
-)
-  ENGINE = INNODB
-  DEFAULT CHARSET = LATIN1;
-
-CREATE TABLE IF NOT EXISTS `milestones` (
-  `resource_id`           VARCHAR(100)    NOT NULL,
-  `timestamp`               BIGINT(15)    NOT NULL,
-  `shared_properties`             TEXT        NULL,
-  `status`                VARCHAR(100)    NOT NULL,
-  PRIMARY KEY (`resource_id`, `timestamp`)
-)
-  ENGINE = INNODB
-  DEFAULT CHARSET = LATIN1;

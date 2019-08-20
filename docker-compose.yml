@@ -218,7 +218,7 @@ services:
   # == == == == == Data-Centric Hub - APIs == == == == ==
 
   dcd-api-http:
-    image: datacentricdesign/dcd-api-http:latest
+    image: datacentricdesign/dcd-api-http:$DCD_API_HTTP_VERSION
     container_name: dcd-api-http
 #    build:
 #      context: ../dcd-api-http
@@ -246,7 +246,7 @@ services:
       - /data/files:/usr/src/app/files
 
   dcd-api-mqtt:
-    image: datacentricdesign/dcd-api-mqtt:latest
+    image: datacentricdesign/dcd-api-mqtt:$DCD_API_MQTT_VERSION
 #    build:
 #      context: ../dcd-api-mqtt
 #      dockerfile: Dockerfile
@@ -276,7 +276,7 @@ services:
   # == == == == == Data-Centric Hub - Stores == == == == ==
 
   dcd-store-influxdb:
-    image: datacentricdesign/dcd-store-influxdb:latest
+    image: datacentricdesign/dcd-store-influxdb:$DCD_STORE_INFLUXDB_VERSION
 #    build:
 #      context: ../dcd-store-influxdb
 #      dockerfile: Dockerfile
@@ -295,7 +295,7 @@ services:
   # == == == == == Data-Centric Hub - Web Portals == == == == ==
 
   dcd-auth:
-    image: datacentricdesign/dcd-auth:latest
+    image: datacentricdesign/dcd-auth:$DCD_AUTH_VERSION
 #    build:
 #      context: ../dcd-auth
 #      dockerfile: Dockerfile
@@ -313,8 +313,8 @@ services:
       - OAUTH2_CLIENT_ID=$AUTH_CLIENT_ID
       - OAUTH2_CLIENT_SECRET=$AUTH_CLIENT_SECRET
 
-  dcd-data-subject:
-    image: datacentricdesign/dcd-data-subject:latest
+  dcd-app-subject:
+    image: datacentricdesign/dcd-data-subject:$DCD_APP_SUBJECT_VERSION
 #    build:
 #      context: ../dcd-data-subject
 #      dockerfile: Dockerfile
@@ -336,7 +336,7 @@ services:
       - MAPS_KEY=$MAPS_KEY
 
   dcd-website:
-    image: datacentricdesign/dcd-website:latest
+    image: datacentricdesign/dcd-website:$DCD_WEBSITE_VERSION
 #    build:
 #      context: ../dcd-website
 #      dockerfile: Dockerfile
@@ -345,7 +345,7 @@ services:
   # == == == == == Data-Centric Hub - Processors == == == == ==
 
   dcd-processor:
-    image: datacentricdesign/dcd-processor:latest
+    image: datacentricdesign/dcd-processor:$DCD_PROCESSOR_VERSION
 #    build:
 #      context: ../dcd-processor
 #      dockerfile: Dockerfile

@@ -1,5 +1,5 @@
 {
-  "client_id": "${API_HTTP__CLIENT_ID}",
+  "client_id": "${API_HTTP_CLIENT_ID}",
   "name": "DCD - APP HTTP",
   "description": "The HTTP API of the Data-Centric Design hub.",
   "client_secret": "${API_HTTP_CLIENT_SECRET}",

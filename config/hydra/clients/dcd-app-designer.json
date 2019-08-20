@@ -1,5 +1,5 @@
 {
-  "client_id": "${APP_DESIGNER__CLIENT_ID}",
+  "client_id": "${APP_DESIGNER_CLIENT_ID}",
   "name": "DCD - Designer",
   "description": "The HTTP API of the Data-Centric Design hub.",
   "client_secret": "${APP_DESIGNER_CLIENT_SECRET}",

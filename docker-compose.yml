@@ -188,8 +188,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   logstash:
-    container_name: logstash
     image: logstash:7.2.0
+    container_name: logstash
     command: bin/logstash -f /opt/logstash/logstash.conf
     volumes:
       - ./config/logs/logstash.conf:/opt/logstash/logstash.conf
@@ -231,7 +231,6 @@ services:
       - MODEL_HOST=$HOST
       - KAFKA=true
       - HTTPS=true
-      - GRAFANA_PASSWORD=admin
       - KAFKA_HOST=kafka
       - KAFKA_PORT=$KAFKA_PORT
       - API_URL=$PROTOCOL://$HOST:$PORT/api
@@ -257,7 +256,6 @@ services:
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - HTTPS=true
-      - GRAFANA_PASSWORD=admin
       - MQTT_HOST=0.0.0.0
       - MQTT_PORT=8883
       - NODE_TLS_REJECT_UNAUTHORIZED=0
@@ -284,7 +282,7 @@ services:
 #      dockerfile: Dockerfile
     container_name: dcd-store-influxdb
     environment:
-      - LOG_LEVEL=INFO
+      - LOG_LEVEL=$LOG_LEVEL
       - INFLUXDB_HOST=influxdb
       - INFLUXDB_NAME=dcdhub
       - HTTPS=true
@@ -305,7 +303,6 @@ services:
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - HTTPS=true
-      - GRAFANA_PASSWORD=admin
       - PORT=8888
       - NODE_TLS_REJECT_UNAUTHORIZED=0
       - CRYPTO_KEY=$CRYPTO_KEY
@@ -354,7 +351,7 @@ services:
 #      dockerfile: Dockerfile
     container_name: dcd-processor
     environment:
-      - LOG_LEVEL=DEBUG
+      - LOG_LEVEL=$LOG_LEVEL
       - HTTPS=true
       - CRYPTO_KEY=$CRYPTO_KEY
       - KAFKA=true

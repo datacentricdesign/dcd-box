@@ -11,5 +11,6 @@ function getid {
 function getclientid {
     filename=$1
     content=$(cat $filename | sed 's/\n|\r//')
+    echo content
     echo $content | grep '"client_id":' | sed 's/.\+"client_id":\s\+"\([^"]*\)".\+/\1/g'
 }

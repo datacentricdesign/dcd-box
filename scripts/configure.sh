@@ -24,7 +24,7 @@ echo "Executing bootstrap scripts..."
 
 hydra_url=${HYDRA_URL:=undefined}
 hydra_admin_url=${HYDRA_ADMIN_URL:=undefined}
-oathkeeper_url=${OATHKEEPER_API_URL:=undefined}
+#oathkeeper_url=${OATHKEEPER_API_URL:=undefined}
 keto_url=${KETO_URL:=undefined}
 
 export HYDRA_URL=${hydra_url%/}/

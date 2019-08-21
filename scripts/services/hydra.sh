@@ -7,14 +7,14 @@ source "$( dirname "${BASH_SOURCE[0]}" )/../helper/getid.sh"
 path=$1
 client_path="$path/clients/*.json"
 
-#echo "Deleting clients in $client_path..."
-#for filename in $client_path; do
-#    echo "Deleting client in file $filename..."
-#    id=$(getclientid $filename)
-#    echo "Deleting client $id..."
-#    (set -x; hydra clients --fake-tls-termination delete $id || true)
-#done
-#echo "Deleted all clients in $client_path!"
+echo "Deleting clients in $client_path..."
+for filename in $client_path; do
+    echo "Deleting client in file $filename..."
+    id=$(getclientid $filename)
+    echo "Deleting client $id..."
+    (set -x; hydra clients --fake-tls-termination delete $id || true)
+done
+echo "Deleted all clients in $client_path!"
 
 echo "Importing clients in $client_path..."
 for filename in $client_path; do

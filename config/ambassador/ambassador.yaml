@@ -6,3 +6,5 @@ config:
   diagnostics:
     # Stop the diagnostics endpoint from being publicly available
     enabled: false
+
+  service_port: 443

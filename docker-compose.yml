@@ -63,7 +63,7 @@ services:
       - POSTGRES_DB=$AC_DB
 
   ambassador:
-    image: quay.io/datawire/ambassador:0.40.2
+    image: quay.io/datawire/ambassador:0.75.0
     container_name: ambassador
     ports:
       - 80:80

@@ -1,13 +1,13 @@
 apiVersion: ambassador/v1
 kind: TLSContext
-name: tls-context-1
+name: tls
 
 # 'hosts' defines which the hosts for which this TLSContext is relevant.
 # It ties into SNI. A TLSContext without "hosts" is useful only for
 # originating TLS.
 # type: array of strings
 #
-#hosts: ["*"]
+hosts: ["*"]
 
 # 'secret' defines a Kubernetes Secret that contains the TLS certificate we
 # use for origination or termination. If not specified, Ambassador will look
@@ -43,7 +43,7 @@ name: tls-context-1
 
 # 'min_tls_version' sets the minimum acceptable TLS version: v1.0, v1.1,
 # v1.2, or v1.3. It defaults to v1.0.
-min_tls_version: v1.2
+# min_tls_version: v1.0
 
 # 'max_tls_version' sets the maximum acceptable TLS version: v1.0, v1.1,
 # v1.2, or v1.3. It defaults to v1.3.

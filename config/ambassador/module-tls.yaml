@@ -1,0 +1,6 @@
+apiVersion: ambassador/v1
+kind: Module
+name: tls
+config:
+  server:
+    redirect_cleartext_from: 80

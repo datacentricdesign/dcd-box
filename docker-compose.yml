@@ -50,7 +50,7 @@ services:
       - SERVER_TLS_ALLOW_TERMINATION_FROM=172.18.0.22/24
       - CORS_ALLOWED_ORIGINS=http://localhost:4200
     volumes:
-      - /etc/ssl/certs:/etc/certs
+      - ./certs:/etc/certs
       - ./config/hydra/.hydra:/.hydra
     restart: on-failure
 
@@ -70,7 +70,7 @@ services:
       - 443:443
     volumes:
       - ./config/ambassador:/ambassador/ambassador-config
-      - /etc/ssl/certs:/etc/certs
+      - ./certs:/etc/certs
     environment:
       # don't try to watch Kubernetes for configuration changes
       - AMBASSADOR_NO_KUBEWATCH=no_kubewatch

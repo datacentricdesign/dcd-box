@@ -66,8 +66,8 @@ services:
     image: quay.io/datawire/ambassador:0.75.0
     container_name: ambassador
     ports:
-      - 80:80
-      - 443:443
+      - 8080:80
+      - 8443:443
     volumes:
       - ./config/ambassador:/ambassador/ambassador-config
       - ./certs:/etc/certs

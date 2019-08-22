@@ -43,7 +43,7 @@ name: tls-context-1
 
 # 'min_tls_version' sets the minimum acceptable TLS version: v1.0, v1.1,
 # v1.2, or v1.3. It defaults to v1.0.
-# min_tls_version: v1.0
+min_tls_version: v1.2
 
 # 'max_tls_version' sets the maximum acceptable TLS version: v1.0, v1.1,
 # v1.2, or v1.3. It defaults to v1.3.

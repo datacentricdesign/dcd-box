@@ -14,7 +14,7 @@ hosts: ["*"]
 # at the value of cert_chain_file and private_key_file.
 # type: string
 #
-secret: None
+#secret: None
 
 # 'ca_secret' defines a Kubernetes Secret that contains the TLS certificate we
 # use for verifying incoming TLS client certificates.

@@ -7,7 +7,7 @@ name: tls-context-1
 # originating TLS.
 # type: array of strings
 #
-hosts: ["*"]
+#hosts: ["*"]
 
 # 'secret' defines a Kubernetes Secret that contains the TLS certificate we
 # use for origination or termination. If not specified, Ambassador will look

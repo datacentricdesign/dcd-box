@@ -70,7 +70,7 @@ services:
       - 443:443
     volumes:
       - ./config/ambassador:/ambassador/ambassador-config
-      - /etc/ssl/certs:/etc/certs
+      - /etc/ssl/certs:/etc/certs:z rhel7 /bin/sh
     environment:
       # don't try to watch Kubernetes for configuration changes
       - AMBASSADOR_NO_KUBEWATCH=no_kubewatch

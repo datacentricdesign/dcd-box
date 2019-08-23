@@ -62,6 +62,63 @@ services:
       - POSTGRES_PASSWORD=$AC_DB_PASSWORD
       - POSTGRES_DB=$AC_DB
 
+#  oathkeeper-proxy:
+#    image: oryd/oathkeeper:$OATHKEEPER_VERSION
+#    container_name: oathkeeper-proxy
+#    ports:
+#      - 4455:4455
+#    depends_on:
+#      - oathkeeper-api
+#      - hydra
+#      - keto
+#    command:
+#      serve proxy
+#    environment:
+#      - LOG_LEVEL=$LOG_LEVEL
+#      - PORT=4455
+#      - ISSUER_URL=$PROTOCOL://$HOST:$PORT
+#      - OATHKEEPER_API_URL=http://oathkeeper-api:4456
+#      - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
+#      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
+#      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_ADMIN_URL=http://hydra:4445
+#      - CREDENTIALS_ISSUER_ID_TOKEN_LIFESPAN=1h
+#      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://oathkeeper-api:4456
+#      - CREDENTIALS_ISSUER_ID_TOKEN_JWK_REFRESH_INTERVAL=30m
+#      - AUTHORIZER_KETO_URL=http://keto:4466
+#      - AUTHENTICATOR_ANONYMOUS_USERNAME=anonymous
+#      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=http://hydra:4445/oauth2/introspect
+#      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=http://hydra:4444/oauth2/token
+#    volumes:
+#      - ./certs:/etc/certs
+#    restart: on-failure
+#
+#  oathkeeper-api:
+#    image: oryd/oathkeeper:$OATHKEEPER_VERSION
+#    container_name: oathkeeper-api
+#    ports:
+#      - 4456:4456
+#    depends_on:
+#      - hydra-migrate
+#    command:
+#      serve api
+#    environment:
+#      - CORS_ENABLED=true
+#      - CORS_ALLOWED_METHODS=POST,GET,PUT,DELETE
+#      - LOG_LEVEL=debug
+#      - PORT=4456
+#      - DATABASE_URL=postgres://dbuser:secret@postgresd:5432/accesscontroldb?sslmode=disable
+#      - ISSUER_URL=$PROTOCOL://$HOST:$PORT
+#      - AUTHORIZER_KETO_URL=http://keto:4466
+#      - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
+#      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
+#      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_ADMIN_URL=http://hydra:4445
+#      - CREDENTIALS_ISSUER_ID_TOKEN_LIFESPAN=1h
+#      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://oathkeeper-api:4456
+#      - CREDENTIALS_ISSUER_ID_TOKEN_JWK_REFRESH_INTERVAL=30m
+#      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=http://hydra:4445/oauth2/introspect
+#      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=http://hydra:4444/oauth2/token
+#    restart: on-failure
+
   ambassador:
     image: quay.io/datawire/ambassador:0.75.0
     container_name: ambassador

@@ -5,4 +5,4 @@ config:
   x_forwarded_proto_redirect: true
   diagnostics:
     # Stop the diagnostics endpoint from being publicly available
-    enabled: false
+    enabled: False

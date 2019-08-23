@@ -74,7 +74,7 @@ services:
     environment:
       # don't try to watch Kubernetes for configuration changes
       - AMBASSADOR_NO_KUBEWATCH=no_kubewatch
-      - AMBASSADOR_NO_SECRETS=true
+      - AMBASSADOR_NO_SECRETS=True
 
   keto:
     image: oryd/keto:$KETO_VERSION

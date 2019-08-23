@@ -66,14 +66,15 @@ services:
     image: quay.io/datawire/ambassador:0.75.0
     container_name: ambassador
     ports:
-      - 80:80
-      - 443:443
+      - 80:8080
+      - 443:8443
     volumes:
       - ./config/ambassador:/ambassador/ambassador-config
       - ./certs:/etc/certs
     environment:
       # don't try to watch Kubernetes for configuration changes
       - AMBASSADOR_NO_KUBEWATCH=no_kubewatch
+      - AMBASSADOR_NO_SECRETS=true
 
   keto:
     image: oryd/keto:$KETO_VERSION

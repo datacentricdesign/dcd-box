@@ -3,4 +3,5 @@ kind: Module
 name: tls
 config:
   server:
-    redirect_cleartext_from: 80
+    enabled: True
+    redirect_cleartext_from: 8080

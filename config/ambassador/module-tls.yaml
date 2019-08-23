@@ -1,0 +1,8 @@
+apiVersion: ambassador/v1
+kind: Module
+name: tls
+config:
+  server:
+    enabled: True
+    secret: ambassador-certs
+    redirect_cleartext_from: 8080

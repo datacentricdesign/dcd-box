@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.18.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: dcd-auth
+  name: dcd-auth
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: dcd-auth
+    spec:
+      containers:
+      - env:
+        - name: API_URL
+          value: http://dcd-api-http:4478/api
+        - name: CRYPTO_KEY
+        - name: HTTPS
+          value: "true"
+        - name: HYDRA_ADMIN_URL
+          value: http://hydra:4445
+        - name: KETO_URL
+          value: '://:'
+        - name: LOG_LEVEL
+        - name: NODE_TLS_REJECT_UNAUTHORIZED
+          value: "0"
+        - name: OAUTH2_CLIENT_ID
+        - name: OAUTH2_CLIENT_SECRET
+        - name: OAUTH2_TOKEN_URL
+          value: ://:/oauth2/token
+        - name: PORT
+          value: "8888"
+        image: 'datacentricdesign/dcd-auth:'
+        name: dcd-auth
+        resources: {}
+      restartPolicy: Always
+status: {}

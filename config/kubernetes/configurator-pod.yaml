@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: configurator
+  name: configurator
+spec:
+  containers:
+  - env:
+    - name: API_HTTP_CLIENT_ID
+    - name: API_HTTP_CLIENT_SECRET
+    - name: API_MQTT_CLIENT_ID
+    - name: API_MQTT_CLIENT_SECRET
+    - name: APP_DESIGNER_CLIENT_ID
+    - name: APP_DESIGNER_CLIENT_SECRET
+    - name: APP_MOBILE_CLIENT_ID
+    - name: APP_SUBJECT_CLIENT_ID
+    - name: APP_SUBJECT_CLIENT_SECRET
+    - name: AUTH_CLIENT_ID
+    - name: AUTH_CLIENT_SECRET
+    - name: HOST
+    - name: HYDRA_ACTION_PREFIX
+      value: 'actions:hydra:'
+    - name: HYDRA_ADMIN_URL
+      value: http://hydra:4445
+    - name: HYDRA_RESOURCE_PREFIX
+      value: 'resources:hydra:'
+    - name: HYDRA_SUBJECT_PREFIX
+      value: 'subjects:hydra:'
+    - name: HYDRA_URL
+      value: http://hydra:4444
+    - name: KETO_ACTION_PREFIX
+      value: 'actions:keto:'
+    - name: KETO_HYDRA_CLIENT_ID
+    - name: KETO_HYDRA_CLIENT_SECRET
+    - name: KETO_RESOURCE_PREFIX
+      value: 'resources:keto:'
+    - name: KETO_URL
+      value: http://keto:4466
+    - name: OATHKEEPER_ACTION_PREFIX
+      value: 'actions:oathkeeper:'
+    - name: OATHKEEPER_RESOURCE_PREFIX
+      value: 'resources:oathkeeper:'
+    - name: PORT
+    - name: PROTOCOL
+    image: configurator
+    name: configurator
+    resources: {}
+    volumeMounts:
+    - mountPath: /scripts
+      name: configurator-claim0
+  restartPolicy: OnFailure
+  volumes:
+  - name: configurator-claim0
+    persistentVolumeClaim:
+      claimName: configurator-claim0
+status: {}

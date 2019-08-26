@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.18.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: dcd-processor
+  name: dcd-processor
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: dcd-processor
+    spec:
+      containers:
+      - env:
+        - name: AUTH_ENABLED
+          value: "false"
+        - name: CHECK_ACTIVITY_COUNT
+          value: "60000"
+        - name: CRYPTO_KEY
+        - name: HTTPS
+          value: "true"
+        - name: KAFKA
+          value: "true"
+        - name: KAFKA_HOST
+          value: kafka
+        - name: KAFKA_PORT
+        - name: LOG_LEVEL
+        image: 'datacentricdesign/dcd-processor:'
+        name: dcd-processor
+        resources: {}
+      restartPolicy: Always
+status: {}

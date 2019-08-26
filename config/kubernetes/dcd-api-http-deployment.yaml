@@ -1,0 +1,64 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.18.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: dcd-api-http
+  name: dcd-api-http
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: dcd-api-http
+    spec:
+      containers:
+      - env:
+        - name: API_URL
+          value: ://:/api
+        - name: CRYPTO_KEY
+        - name: HTTPS
+          value: "true"
+        - name: HYDRA_ADMIN_URL
+          value: http://hydra:4445
+        - name: HYDRA_URL
+          value: '://:'
+        - name: KAFKA
+          value: "true"
+        - name: KAFKA_HOST
+          value: kafka
+        - name: KAFKA_PORT
+        - name: KETO_URL
+          value: '://:'
+        - name: LOG_LEVEL
+        - name: MODEL_HOST
+        - name: NODE_TLS_REJECT_UNAUTHORIZED
+          value: "0"
+        - name: OATHKEEPER_KEY_URL
+          value: http://oathkeeper-api:4456/.well-known/jwks.json
+        - name: OAUTH2_CLIENT_ID
+        - name: OAUTH2_CLIENT_SECRET
+        - name: OAUTH2_INTROSPECT_URL
+          value: ://:/oauth2/introspect
+        - name: OAUTH2_TOKEN_URL
+          value: ://:/oauth2/token
+        - name: PORT
+          value: "4478"
+        image: 'datacentricdesign/dcd-api-http:'
+        name: dcd-api-http
+        resources: {}
+        volumeMounts:
+        - mountPath: /usr/src/app/files
+          name: dcd-api-http-claim0
+      restartPolicy: Always
+      volumes:
+      - name: dcd-api-http-claim0
+        persistentVolumeClaim:
+          claimName: dcd-api-http-claim0
+status: {}

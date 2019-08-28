@@ -14,5 +14,5 @@ spec:
         run: website
     spec:
       containers:
-      - image: 'datacentricdesign/dcd-website:'
+      - image: 'datacentricdesign/dcd-website:latest'
         name: website

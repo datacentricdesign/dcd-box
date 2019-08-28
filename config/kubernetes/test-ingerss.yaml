@@ -1,12 +1,12 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: kubernetes-tutorial-ingress
+  name: nginx-ingress-resource
 spec:
   rules:
-    - http:
+    - host: 131.180.125.156
+      http:
         paths:
-          - path: /
-            backend:
-              serviceName: kubernetes-tutorial-cluster-ip
+          - backend:
+              serviceName: nginx-deploy
               servicePort: 80

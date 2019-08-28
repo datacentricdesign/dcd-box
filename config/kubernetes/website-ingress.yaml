@@ -7,7 +7,7 @@ spec:
     - host: dwd.tudelft.nl
       http:
         paths:
-          - path: /website
+          - path: /
             backend:
               serviceName: website-deploy
               servicePort: 80

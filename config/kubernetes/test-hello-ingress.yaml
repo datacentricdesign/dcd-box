@@ -4,9 +4,10 @@ metadata:
   name: hello-ingress-resource
 spec:
   rules:
-    - host: awesome.showmeyour.codes
+    - host: dwd.tudelft.nl
       http:
         paths:
-          - backend:
+          - path: /hello
+            backend:
               serviceName: hello-deploy
               servicePort: 80

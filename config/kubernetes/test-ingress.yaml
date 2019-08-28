@@ -8,6 +8,6 @@ spec:
       http:
         paths:
           - path: /
-           backend:
+            backend:
               serviceName: nginx-deploy
               servicePort: 80

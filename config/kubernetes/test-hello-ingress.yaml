@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-ingress-resource
+spec:
+  rules:
+    - host: awesome.showmeyour.codes
+      http:
+        paths:
+          - backend:
+              serviceName: hello-deploy
+              servicePort: 80

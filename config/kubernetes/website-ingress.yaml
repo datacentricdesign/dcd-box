@@ -9,5 +9,5 @@ spec:
         paths:
           - path: /website
             backend:
-              serviceName: website-deploy
+              serviceName: website
               servicePort: 80

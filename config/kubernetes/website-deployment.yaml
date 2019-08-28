@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: website
+  name: website-deploy
+spec:
+  selector:
+    matchLabels:
+      run: website
+  template:
+    metadata:
+      labels:
+        run: website
+    spec:
+      containers:
+      - image: 'datacentricdesign/dcd-website:'
+        name: website

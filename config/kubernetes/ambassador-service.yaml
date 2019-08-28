@@ -3,10 +3,8 @@ kind: Service
 metadata:
   name: ambassador
 spec:
-  loadBalancerSourceRanges:
-  - 0.0.0.0/0
   type: LoadBalancer
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: Local
   ports:
   - name: "80"
     port: 80

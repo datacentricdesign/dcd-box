@@ -4,7 +4,7 @@ metadata:
   name: nginx-ingress-resource
 spec:
   rules:
-    - ip: 131.180.125.156
+    - host: dwd.tudelft.nl
       http:
         paths:
           - backend:

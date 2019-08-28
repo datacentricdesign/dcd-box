@@ -5,13 +5,14 @@ metadata:
     run: website
   name: website-deploy
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      run: website
+      run: website-main
   template:
     metadata:
       labels:
-        run: website
+        run: website-main
     spec:
       containers:
       - image: datacentricdesign/dcd-website:latest

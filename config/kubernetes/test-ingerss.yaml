@@ -4,7 +4,7 @@ metadata:
   name: nginx-ingress-resource
 spec:
   rules:
-    - host: 131.180.125.156
+    - ip: 131.180.125.156
       http:
         paths:
           - backend:

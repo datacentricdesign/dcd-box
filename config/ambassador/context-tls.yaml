@@ -14,13 +14,13 @@ hosts: ["*"]
 # at the value of cert_chain_file and private_key_file.
 # type: string
 #
-#secret: None
+secret: None
 
 # 'ca_secret' defines a Kubernetes Secret that contains the TLS certificate we
 # use for verifying incoming TLS client certificates.
 # type: string
 #
-#ca_secret: None
+ca_secret: None
 
 # Tells Ambassador whether to interpret a "." in the secret name as a "." or
 # a namespace identifier.

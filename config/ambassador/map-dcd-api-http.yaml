@@ -1,6 +1,6 @@
 apiVersion: ambassador/v1
 kind:  Mapping
-name:  api_mapping
+name:  dcd_api_http_mapping
 prefix: /api
 rewrite: /api
 timeout_ms: 10000

@@ -1,7 +1,0 @@
-apiVersion: ambassador/v1
-kind:  Mapping
-name:  web_ui_mapping
-prefix: /manager
-rewrite: /manager
-timeout_ms: 10000
-service: dcd-web-ui:3000

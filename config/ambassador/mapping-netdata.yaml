@@ -1,7 +1,0 @@
-apiVersion: ambassador/v1
-kind:  Mapping
-name:  netdata_mapping
-prefix: /netdata/
-rewrite: /
-timeout_ms: 10000
-service: netdata:19999

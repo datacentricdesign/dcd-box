@@ -62,65 +62,8 @@ services:
       - POSTGRES_PASSWORD=$AC_DB_PASSWORD
       - POSTGRES_DB=$AC_DB
 
-#  oathkeeper-proxy:
-#    image: oryd/oathkeeper:$OATHKEEPER_VERSION
-#    container_name: oathkeeper-proxy
-#    ports:
-#      - 4455:4455
-#    depends_on:
-#      - oathkeeper-api
-#      - hydra
-#      - keto
-#    command:
-#      serve proxy
-#    environment:
-#      - LOG_LEVEL=$LOG_LEVEL
-#      - PORT=4455
-#      - ISSUER_URL=$PROTOCOL://$HOST:$PORT
-#      - OATHKEEPER_API_URL=http://oathkeeper-api:4456
-#      - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
-#      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
-#      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_ADMIN_URL=http://hydra:4445
-#      - CREDENTIALS_ISSUER_ID_TOKEN_LIFESPAN=1h
-#      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://oathkeeper-api:4456
-#      - CREDENTIALS_ISSUER_ID_TOKEN_JWK_REFRESH_INTERVAL=30m
-#      - AUTHORIZER_KETO_URL=http://keto:4466
-#      - AUTHENTICATOR_ANONYMOUS_USERNAME=anonymous
-#      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=http://hydra:4445/oauth2/introspect
-#      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=http://hydra:4444/oauth2/token
-#    volumes:
-#      - ./certs:/etc/certs
-#    restart: on-failure
-#
-#  oathkeeper-api:
-#    image: oryd/oathkeeper:$OATHKEEPER_VERSION
-#    container_name: oathkeeper-api
-#    ports:
-#      - 4456:4456
-#    depends_on:
-#      - hydra-migrate
-#    command:
-#      serve api
-#    environment:
-#      - CORS_ENABLED=true
-#      - CORS_ALLOWED_METHODS=POST,GET,PUT,DELETE
-#      - LOG_LEVEL=debug
-#      - PORT=4456
-#      - DATABASE_URL=postgres://dbuser:secret@postgresd:5432/accesscontroldb?sslmode=disable
-#      - ISSUER_URL=$PROTOCOL://$HOST:$PORT
-#      - AUTHORIZER_KETO_URL=http://keto:4466
-#      - CREDENTIALS_ISSUER_ID_TOKEN_ALGORITHM=ory-hydra
-#      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_JWK_SET_ID=resources:hydra:jwk:oathkeeper
-#      - CREDENTIALS_ISSUER_ID_TOKEN_HYDRA_ADMIN_URL=http://hydra:4445
-#      - CREDENTIALS_ISSUER_ID_TOKEN_LIFESPAN=1h
-#      - CREDENTIALS_ISSUER_ID_TOKEN_ISSUER=http://oathkeeper-api:4456
-#      - CREDENTIALS_ISSUER_ID_TOKEN_JWK_REFRESH_INTERVAL=30m
-#      - AUTHENTICATOR_OAUTH2_INTROSPECTION_URL=http://hydra:4445/oauth2/introspect
-#      - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=http://hydra:4444/oauth2/token
-#    restart: on-failure
-
   ambassador:
-    image: quay.io/datawire/ambassador:0.75.0
+    image: quay.io/datawire/ambassador:0.76.0
     container_name: ambassador
     ports:
       - 80:8080
@@ -267,34 +210,11 @@ services:
       - ./config/logs/logstash.conf:/opt/logstash/logstash.conf
       - /data/logs:/var/log/logstash
 
-
-  # == == == == == Services == == == == ==
-
-  netdata:
-    image: netdata/netdata
-    container_name: netdata
-    hostname: dwd.tudelft.nl
-    security_opt:
-      - apparmor:unconfined
-    cap_add:
-      - SYS_PTRACE
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    ports:
-      - 19999:19999
-
-  # == == == == == Data-Centric Hub == == == == ==
-
   # == == == == == Data-Centric Hub - APIs == == == == ==
 
   dcd-api-http:
     image: datacentricdesign/dcd-api-http:$DCD_API_HTTP_VERSION
     container_name: dcd-api-http
-#    build:
-#      context: ../dcd-api-http
-#      dockerfile: Dockerfile
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - PORT=4478
@@ -319,9 +239,6 @@ services:
 
   dcd-api-mqtt:
     image: datacentricdesign/dcd-api-mqtt:$DCD_API_MQTT_VERSION
-#    build:
-#      context: ../dcd-api-mqtt
-#      dockerfile: Dockerfile
     container_name: dcd-api-mqtt
     ports:
       - 8883:8883
@@ -349,9 +266,6 @@ services:
 
   dcd-store-influxdb:
     image: datacentricdesign/dcd-store-influxdb:$DCD_STORE_INFLUXDB_VERSION
-#    build:
-#      context: ../dcd-store-influxdb
-#      dockerfile: Dockerfile
     container_name: dcd-store-influxdb
     environment:
       - LOG_LEVEL=$LOG_LEVEL
@@ -364,19 +278,15 @@ services:
       - KAFKA_HOST=kafka
       - KAFKA_PORT=$KAFKA_PORT
 
-  # == == == == == Data-Centric Hub - Web Portals == == == == ==
+  # == == == == == Data-Centric Hub - Apps == == == == ==
 
-  dcd-auth:
-    image: datacentricdesign/dcd-auth:$DCD_AUTH_VERSION
-#    build:
-#      context: ../dcd-auth
-#      dockerfile: Dockerfile
-    container_name: dcd-auth
+  dcd-app-identity-provider:
+    image: datacentricdesign/dcd-app-identity-provider:$DCD_AUTH_VERSION
+    container_name: dcd-app-identity-provider
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - HTTPS=true
       - PORT=8888
-      - NODE_TLS_REJECT_UNAUTHORIZED=0
       - CRYPTO_KEY=$CRYPTO_KEY
       - API_URL=http://dcd-api-http:4478/api
       - KETO_URL=$PROTOCOL://$HOST:$PORT
@@ -387,9 +297,6 @@ services:
 
   dcd-app-subject:
     image: datacentricdesign/dcd-data-subject:$DCD_APP_SUBJECT_VERSION
-#    build:
-#      context: ../dcd-data-subject
-#      dockerfile: Dockerfile
     container_name: dcd-data-subject
     environment:
       - LOG_LEVEL=$LOG_LEVEL
@@ -409,18 +316,12 @@ services:
 
   dcd-website:
     image: datacentricdesign/dcd-website:$DCD_WEBSITE_VERSION
-#    build:
-#      context: ../dcd-website
-#      dockerfile: Dockerfile
     container_name: dcd-website
 
   # == == == == == Data-Centric Hub - Processors == == == == ==
 
   dcd-processor:
     image: datacentricdesign/dcd-processor:$DCD_PROCESSOR_VERSION
-#    build:
-#      context: ../dcd-processor
-#      dockerfile: Dockerfile
     container_name: dcd-processor
     environment:
       - LOG_LEVEL=$LOG_LEVEL

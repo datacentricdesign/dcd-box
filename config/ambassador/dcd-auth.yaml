@@ -1,6 +1,0 @@
-apiVersion: ambassador/v1
-kind:  Mapping
-name:  auth_mapping
-prefix: /auth
-rewrite: /auth
-service: dcd-auth:8888

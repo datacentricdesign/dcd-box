@@ -6,7 +6,7 @@
   "scope": "openid,offline,profile,dcd:public,dcd:things,dcd:persons",
   "grant_types": ["authorization_code", "refresh_token"],
   "response_types": ["token", "code", "id_token"],
-  "callbacks": [
+  "redirect_uris": [
     "nl.tudelft.ide.dcd-mobile-app:/oauth2redirect"
   ],
   "token_endpoint_auth_method": "none"

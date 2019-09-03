@@ -6,8 +6,8 @@
   "scope": "openid,offline,profile,dcd:public,dcd:things,dcd:persons",
   "grant_types": ["client_credentials", "refresh_token"],
   "response_types": ["token", "refresh_token"],
-  "callbacks": [
-    "${PROTOCOL}://${HOST}:${PORT}/subject/auth/callback"
+  "redirect_uris": [
+    "${PROTOCOL}://${HOST}:${PORT}/subject/auth/callback",
   ],
   "token_endpoint_auth_method": "client_secret_post"
 }

@@ -1,8 +1,0 @@
-{
-  "id": "dcd:policies:dcd-auth:check",
-  "description": "Give access to the authentication component to check person credentials.",
-  "subjects": ["dcd-auth"],
-  "effect": "allow",
-  "resources": ["dcd:persons:<.*>"],
-  "actions": ["dcd:check"]
-}

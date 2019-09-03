@@ -13,9 +13,9 @@ echo "Substituting environment variables"
 if [ -d "/config/hydra/clients/" ]; then
     envsubstfiles "/config/hydra/clients/*.json"
 fi
-if [ -d "/config/keto/policies/" ]; then
-    envsubstfiles "/config/keto/policies/*.json"
-fi
+#if [ -d "/config/keto/policies/" ]; then
+#    envsubstfiles "/config/keto/policies/*.json"
+#fi
 #if [ -d "/config/oathkeeper/rules/" ]; then
 #    envsubstfiles "/config/oathkeeper/rules/*.json"
 #fi

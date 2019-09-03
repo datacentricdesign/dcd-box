@@ -235,7 +235,7 @@ services:
       - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
       - OAUTH2_CLIENT_ID=$API_HTTP_CLIENT_ID
       - OAUTH2_CLIENT_SECRET=$API_HTTP_CLIENT_SECRET
-      - OAUTH2_INTROSPECT_URL=$PROTOCOL://$HOST:$PORT/oauth2/introspect
+      - OAUTH2_INTROSPECT_URL=http://hydra:4445/oauth2/introspect
     volumes:
       - /data/files:/usr/src/app/files
 

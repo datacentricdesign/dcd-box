@@ -3,4 +3,4 @@ kind:  Mapping
 name:  dcd_app_subject_mapping
 prefix: /subject
 rewrite: /subject
-service: dcd-app-subject:80
+service: dcd-app-subject:8080

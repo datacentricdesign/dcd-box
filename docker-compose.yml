@@ -231,8 +231,8 @@ services:
       - HYDRA_ADMIN_URL=http://hydra:4445
       - HYDRA_URL=$PROTOCOL://$HOST:$PORT
       - OATHKEEPER_KEY_URL=http://oathkeeper-api:4456/.well-known/jwks.json
-      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
-      - OAUTH2_REVOKE_URL=$PROTOCOL://$HOST:$PORT/oauth2/revoke
+      - OAUTH2_TOKEN_URL=http://hydra:444/oauth2/token
+      - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
       - OAUTH2_CLIENT_ID=$API_HTTP_CLIENT_ID
       - OAUTH2_CLIENT_SECRET=$API_HTTP_CLIENT_SECRET
       - OAUTH2_INTROSPECT_URL=$PROTOCOL://$HOST:$PORT/oauth2/introspect
@@ -259,8 +259,8 @@ services:
       - API_URL=$PROTOCOL://$HOST:$PORT/api
       - KETO_URL=$PROTOCOL://$HOST:$PORT
       - HYDRA_ADMIN_URL=$PROTOCOL://$HOST:$PORT
-      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
-      - OAUTH2_REVOKE_URL=$PROTOCOL://$HOST:$PORT/oauth2/revoke
+      - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
+      - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
       - MQTT_CLIENT_USER=$API_MQTT_CLIENT_ID
       - MQTT_CLIENT_PASS=$API_MQTT_CLIENT_SECRET
 
@@ -307,8 +307,8 @@ services:
       - BASE_URL=/subject
       - SERVER_URL=$PROTOCOL://$HOST:$PORT
       - OAUTH2_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth
-      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
-      - OAUTH2_REVOKE_URL=$PROTOCOL://$HOST:$PORT/oauth2/revoke
+      - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
+      - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
       - OAUTH2_CLIENT_ID=$APP_SUBJECT_CLIENT_ID
       - OAUTH2_CLIENT_SECRET=$APP_SUBJECT_CLIENT_SECRET
       - OAUTH2_PROFILE=$PROTOCOL://$HOST:$PORT/userinfo
@@ -326,8 +326,8 @@ services:
       - BASE_URL=/designer
       - SERVER_URL=$PROTOCOL://$HOST:$PORT
       - OAUTH2_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth
-      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
-      - OAUTH2_REVOKE_URL=$PROTOCOL://$HOST:$PORT/oauth2/revoke
+      - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
+      - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
       - OAUTH2_CLIENT_ID=$APP_DESIGNER_CLIENT_ID
       - OAUTH2_CLIENT_SECRET=$APP_DESIGNER_CLIENT_SECRET
       - OAUTH2_PROFILE=$PROTOCOL://$HOST:$PORT/userinfo

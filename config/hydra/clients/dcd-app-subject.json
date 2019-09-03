@@ -5,7 +5,7 @@
   "client_secret": "${APP_SUBJECT_CLIENT_SECRET}",
   "scope": "openid offline profile dcd:public dcd:things dcd:persons",
   "grant_types": ["client_credentials", "refresh_token"],
-  "response_types": ["token", "refresh_token"],
+  "response_types": ["token", "refresh_token", "code"],
   "redirect_uris": [
     "${PROTOCOL}://${HOST}:${PORT}/subject/auth/callback"
   ],

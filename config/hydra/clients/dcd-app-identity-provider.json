@@ -2,7 +2,7 @@
   "client_id": "${APP_IDENTITY_PROVIDER_CLIENT_ID}",
   "description": "Identity Provider of the Data Centric Design Hub.",
   "client_secret": "${APP_IDENTITY_PROVIDER_CLIENT_SECRET}",
-  "scope": "openid dcd:auth",
+  "scope": "openid offline dcd:auth",
   "grant_types": ["client_credentials", "refresh_token"],
   "response_types": ["token"]
 }

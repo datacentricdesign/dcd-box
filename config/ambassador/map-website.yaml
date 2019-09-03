@@ -1,0 +1,6 @@
+apiVersion: ambassador/v1
+kind:  Mapping
+name:  website_mapping
+prefix: /
+rewrite: /
+service: dcd-website:80

@@ -292,8 +292,8 @@ services:
       - API_URL=http://dcd-api-http:4478/api
       - KETO_URL=$PROTOCOL://$HOST:$PORT
       - HYDRA_ADMIN_URL=http://hydra:4445
-      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
-      - OAUTH2_REVOKE_URL=$PROTOCOL://$HOST:$PORT/oauth2/revoke
+      - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
+      - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
       - OAUTH2_CLIENT_ID=$APP_IDENTITY_PROVIDER_CLIENT_ID
       - OAUTH2_CLIENT_SECRET=$APP_IDENTITY_PROVIDER_CLIENT_SECRET
 

@@ -3,7 +3,7 @@
   "name": "DCD - Designer",
   "description": "The HTTP API of the Data-Centric Design hub.",
   "client_secret": "${APP_DESIGNER_CLIENT_SECRET}",
-  "scope": "openid,offline,profile,dcd:public,dcd:things,dcd:persons",
+  "scope": "openid offline profile dcd:public dcd:things dcd:persons",
   "grant_types": ["client_credentials", "refresh_token"],
   "response_types": ["token", "refresh_token"],
   "redirect_uris": [

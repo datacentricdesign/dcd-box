@@ -1,6 +1,6 @@
 {
   "client_id": "${APP_MOBILE_CLIENT_ID}",
-  "name": "DCD - Mobile App Example",
+  "client_name": "DCD - Mobile App Example",
   "description": "The HTTP API of the Data-Centric Design hub.",
   "client_secret": "${APP_DESIGNER_CLIENT_SECRET}",
   "scope": "openid offline profile dcd:public dcd:things dcd:persons",

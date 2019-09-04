@@ -1,6 +1,6 @@
 {
   "client_id": "${API_MQTT_CLIENT_ID}",
-  "name": "DCD - API MQTT",
+  "client_name": "DCD - API MQTT",
   "description": "The MQTT API of the Data-Centric Design hub.",
   "client_secret": "${API_MQTT_CLIENT_SECRET}",
   "scope": "",

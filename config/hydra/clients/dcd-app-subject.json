@@ -1,9 +1,10 @@
 {
   "client_id": "${APP_SUBJECT_CLIENT_ID}",
-  "name": "DCD - Data Subject",
+  "client_name": "DCD - Data Subject",
   "description": "The HTTP API of the Data-Centric Design hub.",
   "client_secret": "${APP_SUBJECT_CLIENT_SECRET}",
   "scope": "openid offline profile dcd:public dcd:things dcd:persons",
+  "logo_uri": "${PROTOCOL}://${HOST}:${PORT}/auth/img/logo/android-icon-192x192.png",
   "grant_types": ["client_credentials", "refresh_token"],
   "response_types": ["token", "refresh_token", "code"],
   "redirect_uris": [

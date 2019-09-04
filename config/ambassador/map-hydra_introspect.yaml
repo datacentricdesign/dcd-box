@@ -1,8 +1,0 @@
-apiVersion: ambassador/v1
-kind:  Mapping
-name:  hydra_introspect_mapping
-prefix: /oauth2/introspect
-rewrite: /oauth2/introspect
-add_request_headers:
-  X-Forwarded-Proto: "https"
-service: hydra:4445

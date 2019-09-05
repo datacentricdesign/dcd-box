@@ -263,6 +263,8 @@ services:
       - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
       - MQTT_CLIENT_USER=$API_MQTT_CLIENT_ID
       - MQTT_CLIENT_PASS=$API_MQTT_CLIENT_SECRET
+    volumes:
+      - ./certs:/etc/certs
 
   # == == == == == Data-Centric Hub - Stores == == == == ==
 

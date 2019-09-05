@@ -8,7 +8,8 @@
   "grant_types": ["client_credentials", "refresh_token"],
   "response_types": ["token", "refresh_token"],
   "redirect_uris": [
-    "${PROTOCOL}://${HOST}:${PORT}/designer/auth/callback"
+    "${PROTOCOL}://${HOST}:${PORT}/designer/auth/callback",
+    "http://localhost:8080/designer/auth/callback"
   ],
   "token_endpoint_auth_method": "client_secret_post"
 }

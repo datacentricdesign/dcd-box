@@ -258,7 +258,7 @@ services:
       - MODEL_HOST=$HOST
       - API_URL=$PROTOCOL://$HOST:$PORT/api
       - KETO_URL=http://keto:4466
-      - HYDRA_ADMIN_URL=$PROTOCOL://$HOST:$PORT
+      - HYDRA_ADMIN_URL=http://hydra:4445
       - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
       - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
       - MQTT_CLIENT_USER=$API_MQTT_CLIENT_ID

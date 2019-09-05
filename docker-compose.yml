@@ -227,7 +227,7 @@ services:
       - KAFKA_HOST=kafka
       - KAFKA_PORT=$KAFKA_PORT
       - API_URL=$PROTOCOL://$HOST:$PORT/api
-      - KETO_URL=$PROTOCOL://$HOST:$PORT
+      - KETO_URL=http://keto:4466
       - HYDRA_ADMIN_URL=http://hydra:4445
       - HYDRA_URL=$PROTOCOL://$HOST:$PORT
       - OATHKEEPER_KEY_URL=http://oathkeeper-api:4456/.well-known/jwks.json
@@ -257,7 +257,7 @@ services:
       - OAUTH2_CLIENT_SECRET=$API_MQTT_CLIENT_SECRET
       - MODEL_HOST=$HOST
       - API_URL=$PROTOCOL://$HOST:$PORT/api
-      - KETO_URL=$PROTOCOL://$HOST:$PORT
+      - KETO_URL=http://keto:4466
       - HYDRA_ADMIN_URL=$PROTOCOL://$HOST:$PORT
       - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
       - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke

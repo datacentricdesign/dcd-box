@@ -308,7 +308,6 @@ services:
       - PORT=8080
       - BASE_URL=/subject
       - SERVER_URL=$PROTOCOL://$HOST:$PORT
-      - NODE_TLS_REJECT_UNAUTHORIZED=0
       - OAUTH2_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth
       - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
       - OAUTH2_REVOKE_URL=$PROTOCOL://$HOST:$PORT/oauth2/revoke

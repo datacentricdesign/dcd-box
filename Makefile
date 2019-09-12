@@ -23,7 +23,5 @@ restart:
 rm:
 		docker-compose kill
 		docker-compose rm -f
-		docker volume rm -f dcd-data-volume-mysql
-		docker volume rm -f dcd-data-volume-influxdb
 
 reset: rm start

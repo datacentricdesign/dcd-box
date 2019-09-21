@@ -306,7 +306,9 @@ services:
       - OAUTH2_CLIENT_SECRET=$APP_IDENTITY_PROVIDER_CLIENT_SECRET
 
   dcd-app-subject:
-    image: datacentricdesign/dcd-app-subject:$DCD_APP_SUBJECT_VERSION
+#    image: datacentricdesign/dcd-app-subject:$DCD_APP_SUBJECT_VERSION
+    build:
+      context: ../dcd-app-subject
     container_name: dcd-app-subject
     environment:
       - LOG_LEVEL=$LOG_LEVEL

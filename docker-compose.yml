@@ -18,7 +18,7 @@ services:
     environment:
       - LOG_LEVEL=$LOG_LEVEL
     command:
-      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable --yes
+      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
     restart: on-failure
 
   hydra:

@@ -242,7 +242,7 @@ services:
   dcd-api-mqtt:
 #    image: datacentricdesign/dcd-api-mqtt:$DCD_API_MQTT_VERSION
     build:
-      context: ./dcd-api-mqtt
+      context: ../dcd-api-mqtt
     container_name: dcd-api-mqtt
     ports:
       - 8883:8883

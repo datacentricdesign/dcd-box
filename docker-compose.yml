@@ -215,7 +215,9 @@ services:
   # == == == == == Data-Centric Hub - APIs == == == == ==
 
   dcd-api-http:
-    image: datacentricdesign/dcd-api-http:$DCD_API_HTTP_VERSION
+#    image: datacentricdesign/dcd-api-http:$DCD_API_HTTP_VERSION
+    build:
+      context: ../dcd-api-http
     container_name: dcd-api-http
     environment:
       - LOG_LEVEL=$LOG_LEVEL

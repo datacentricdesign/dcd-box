@@ -288,7 +288,9 @@ services:
   # == == == == == Data-Centric Hub - Apps == == == == ==
 
   dcd-app-identity-provider:
-    image: datacentricdesign/dcd-app-identity-provider:$DCD_APP_IDENTITY_PROVIDER_VERSION
+#    image: datacentricdesign/dcd-app-identity-provider:$DCD_APP_IDENTITY_PROVIDER_VERSION
+    build:
+      context: ../dcd-app-identity-provider
     container_name: dcd-app-identity-provider
     environment:
       - LOG_LEVEL=$LOG_LEVEL

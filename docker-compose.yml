@@ -78,7 +78,7 @@ services:
       - keto-migrate
     environment:
       - LOG_LEVEL=$LOG_LEVEL
-      - DATABASE_URL=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+      - DSN=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
       - AUTHENTICATOR_OAUTH2_INTROSPECTION_CLIENT_ID=$KETO_CLIENT_ID
       - AUTHENTICATOR_OAUTH2_INTROSPECTION_CLIENT_SECRET=$KETO_CLIENT_SECRET
       - AUTHENTICATOR_OAUTH2_INTROSPECTION_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token

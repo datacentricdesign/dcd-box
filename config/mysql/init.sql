@@ -95,6 +95,15 @@ CREATE TABLE IF NOT EXISTS `d1` (
   ENGINE = INNODB
   DEFAULT CHARSET = LATIN1;
 
+CREATE TABLE IF NOT EXISTS `dtext` (
+  `property_index_id` INT(11) UNSIGNED NOT NULL,
+  `timestamp`         BIGINT(15)       NOT NULL,
+  `value1`            TEXT        NOT NULL,
+  PRIMARY KEY (`property_index_id`, `timestamp`)
+)
+    ENGINE = INNODB
+    DEFAULT CHARSET = LATIN1;
+
 CREATE TABLE IF NOT EXISTS `d2` (
   `property_index_id` INT(11) UNSIGNED NOT NULL,
   `timestamp`         BIGINT(15)       NOT NULL,

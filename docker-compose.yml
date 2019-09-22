@@ -327,7 +327,9 @@ services:
       - MAPS_KEY=$MAPS_KEY
 
   dcd-app-designer:
-    image: datacentricdesign/dcd-app-designer:$DCD_APP_DESIGNER_VERSION
+#    image: datacentricdesign/dcd-app-designer:$DCD_APP_DESIGNER_VERSION
+    build:
+      context: ../dcd-app-designer
     container_name: dcd-app-designer
     environment:
       - LOG_LEVEL=$LOG_LEVEL

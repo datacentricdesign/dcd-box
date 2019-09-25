@@ -1,8 +1,8 @@
 apiVersion: ambassador/v1
 kind:  Mapping
 name:  hydra_oauth2_mapping
-prefix: /oauth2/auth/sessions
-rewrite: /oauth2/auth/sessions
+prefix: /oauth2/auth/sessions/
+rewrite: /oauth2/auth/sessions/
 #add_request_headers:
 #  X-Forwarded-Proto: "https"
 service: hydra:4445

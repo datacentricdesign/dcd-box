@@ -3,6 +3,6 @@ kind:  Mapping
 name:  hydra_wellknown_mapping
 prefix: /.well-known/
 rewrite: /.well-known/
-add_request_headers:
-  X-Forwarded-Proto: "https"
+#add_request_headers:
+#  X-Forwarded-Proto: "https"
 service: hydra:4444

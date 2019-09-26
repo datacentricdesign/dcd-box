@@ -1,6 +1,6 @@
 apiVersion: ambassador/v1
 kind:  Mapping
-name:  hydra_oauth2_mapping
+name:  hydra_oauth2_sessions_mapping
 prefix: /oauth2/auth/sessions/
 rewrite: /oauth2/auth/sessions/
 #add_request_headers:

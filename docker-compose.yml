@@ -35,12 +35,12 @@ services:
       - LOG_LEVEL=$LOG_LEVEL
       - SECRETS_SYSTEM=$HYDRA_SYSTEM_SECRET
       - DSN=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
-      - OAUTH2_CONSENT_URL=$PROTOCOL://$HOST:$PORT/auth/consent
+      - URLS_CONSENT=$PROTOCOL://$HOST:$PORT/auth/consent
       - URLS_LOGIN=$PROTOCOL://$HOST:$PORT/auth/signin
-      - OAUTH2_LOGOUT_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/
-      - OAUTH2_EXPOSE_INTERNAL_ERRORS=1
-      - OAUTH2_ERROR_URL=$PROTOCOL://$HOST:$PORT/auth/error
+      - URLS_LOGOUT=$PROTOCOL://$HOST:$PORT/
+      - URLS_ERROR=$PROTOCOL://$HOST:$PORT/auth/error
       - URLS_SELF_ISSUER=$PROTOCOL://$HOST:$PORT
+      - OAUTH2_EXPOSE_INTERNAL_ERRORS=1
       - TTL_AUTH_CODE=2400h
       - TTL_ID_TOKEN=2400h
       - TTL_ACCESS_TOKEN=2400h
@@ -191,7 +191,7 @@ services:
       - POSTGRES_PASSWORD=$AC_DB_PASSWORD
       - POSTGRES_DB=$AC_DB
     volumes:
-      - /data/postgresql:/var/lib/postgresql
+      - /data/postgresql:/var/lib/postgresql/data
 
   # == == == == == Logging == == == == ==
 

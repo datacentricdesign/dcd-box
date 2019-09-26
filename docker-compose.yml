@@ -37,7 +37,7 @@ services:
       - DSN=postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
       - URLS_CONSENT=$PROTOCOL://$HOST:$PORT/auth/consent
       - URLS_LOGIN=$PROTOCOL://$HOST:$PORT/auth/signin
-      - URLS_LOGOUT=$PROTOCOL://$HOST:$PORT/
+      - URLS_POST_LOGOUT_REDIRECT=$PROTOCOL://$HOST:$PORT/
       - URLS_ERROR=$PROTOCOL://$HOST:$PORT/auth/error
       - URLS_SELF_ISSUER=$PROTOCOL://$HOST:$PORT
       - OAUTH2_EXPOSE_INTERNAL_ERRORS=1

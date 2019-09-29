@@ -335,11 +335,13 @@ CREATE TABLE IF NOT EXISTS `d15` (
   ENGINE = INNODB
   DEFAULT CHARSET = LATIN1;
 
-CREATE TABLE IF NOT EXISTS `entities_roles` (
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id`                INT(11) UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,
   `subject_entity_id` VARCHAR(100) NOT NULL,
   `actor_entity_id`   VARCHAR(100) NOT NULL,
   `role`              VARCHAR(20)  NOT NULL,
-  PRIMARY KEY (`subject_entity_id`, `actor_entity_id`, `role`)
+  PRIMARY KEY (`id`),
+  CONSTRAINT `unique_roles` UNIQUE (`subject_entity_id`, `actor_entity_id`, `role`)
 )
   ENGINE = INNODB
   DEFAULT CHARSET = LATIN1;

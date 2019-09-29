@@ -2,7 +2,7 @@
   "client_id": "test-client-id",
   "client_name": "DCD - TEST",
   "description": "THIS IS A TEST. IF YOUR ARE NOT THE DEVELOPER OF THIS APP, DO NOT CONSENT.",
-  "client_secret": "test-client-id",
+  "client_secret": "test-client-secret",
   "scope": "openid offline profile dcd:public dcd:things dcd:persons",
   "grant_types": ["client_credentials", "refresh_token", "authorization_code"],
   "response_types": ["token", "refresh_token", "code"],

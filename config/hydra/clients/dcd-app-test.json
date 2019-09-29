@@ -1,5 +1,5 @@
 {
-  "client_id": "test-client-id",
+  "client_id": "clients:test-client-id",
   "client_name": "DCD - TEST",
   "description": "THIS IS A TEST. IF YOUR ARE NOT THE DEVELOPER OF THIS APP, DO NOT CONSENT.",
   "client_secret": "test-client-secret",

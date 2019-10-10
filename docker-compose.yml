@@ -256,7 +256,6 @@ services:
       - LOG_LEVEL=$LOG_LEVEL
       - HTTPS=true
       - MQTT_HOST=0.0.0.0
-      - MQTT_PORT=8883
       - CRYPTO_KEY=$CRYPTO_KEY
       - KAFKA=true
       - KAFKA_HOST=kafka

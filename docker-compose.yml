@@ -276,7 +276,9 @@ services:
   # == == == == == Data-Centric Hub - Stores == == == == ==
 
   dcd-store-influxdb:
-    image: datacentricdesign/dcd-store-influxdb:$DCD_STORE_INFLUXDB_VERSION
+#    image: datacentricdesign/dcd-store-influxdb:$DCD_STORE_INFLUXDB_VERSION
+    build:
+      context: ../dcd-api-mqtt
     container_name: dcd-store-influxdb
     environment:
       - LOG_LEVEL=$LOG_LEVEL

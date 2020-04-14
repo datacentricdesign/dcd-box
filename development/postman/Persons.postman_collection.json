@@ -1,0 +1,343 @@
+{
+	"info": {
+		"_postman_id": "61e9bc35-556c-41b1-9a81-ae398b242793",
+		"name": "Persons",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "8j0ovKnFJ6cisZXbDhpBowBsDsro1d8LARIqj_0xhis.48m-b4_4f4IwWrXBB68NX-M7u02vBRKqB0RVEQ-NMeY",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{dcdhub_api_url}}/persons",
+					"host": [
+						"{{dcdhub_api_url}}"
+					],
+					"path": [
+						"persons"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "List persons",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/persons",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"persons"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "88"
+						},
+						{
+							"key": "etag",
+							"value": "W/\"58-GVzr0IuN0aEV8qpiJVie92ZLJes\""
+						},
+						{
+							"key": "date",
+							"value": "Fri, 27 Sep 2019 19:13:17 GMT"
+						},
+						{
+							"key": "x-envoy-upstream-service-time",
+							"value": "25"
+						},
+						{
+							"key": "server",
+							"value": "envoy"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Request not allowed - Missing Authorization header.\",\n    \"error\": {\n        \"status\": 403\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2aef4883-1525-4e56-a2e5-6ca91c6d3bdc",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Check Person id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    console.log(jsonData);",
+							"    pm.expect(jsonData.person.id).not.eql(undefined);",
+							"    pm.environment.set(\"person_id\", jsonData.person.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"{{person_id}}\",\n\t\"name\": \"{{person_name}}\",\n\t\"password\": \"{{person_password}}\"\t\n}"
+				},
+				"url": {
+					"raw": "{{dcdhub_api_url}}/persons",
+					"host": [
+						"{{dcdhub_api_url}}"
+					],
+					"path": [
+						"persons"
+					]
+				},
+				"description": "Create a Person."
+			},
+			"response": [
+				{
+					"name": "Create",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": \"{{person_id}}\",\n\t\"name\": \"{{person_name}}\",\n\t\"password\": \"{{person_password}}\"\t\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/persons",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"persons"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "70"
+						},
+						{
+							"key": "etag",
+							"value": "W/\"46-GAtcALyUnAMZsAQDTNbZsOwauXw\""
+						},
+						{
+							"key": "date",
+							"value": "Fri, 27 Sep 2019 18:43:40 GMT"
+						},
+						{
+							"key": "x-envoy-upstream-service-time",
+							"value": "5"
+						},
+						{
+							"key": "server",
+							"value": "envoy"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 400,\n    \"message\": \"Person test@test.test already exist.\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "vOz3h3nataYb-2Vk4oIMcW3cffS5_68Fh3uwDYgo_NQ._ngEy97fOUUHVreVsXMkVMtHPV8qJJT59KsO6oMHaXw",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "queryParams",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}/persons/{{person_id}}",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"persons",
+						"{{person_id}}"
+					]
+				},
+				"description": "Delete a Person."
+			},
+			"response": []
+		},
+		{
+			"name": "Read",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "RGFnimfIEeyUGBys7fjPoi8P-r3UVXl2XxDmf3Vjx_w.mb5xfAVh7q1TRVchkaSruyhAtR4UnApRvvAsVFvQnfU",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{dcdhub_api_url}}/{{person_id}}",
+					"host": [
+						"{{dcdhub_api_url}}"
+					],
+					"path": [
+						"{{person_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": ""
+				},
+				"description": "Update a Person"
+			},
+			"response": []
+		},
+		{
+			"name": "Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				},
+				"description": "Check the credentials of a Person (username, password). This route requires dcd:auth scope only granted to first-party apps."
+			},
+			"response": []
+		},
+		{
+			"name": "User Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

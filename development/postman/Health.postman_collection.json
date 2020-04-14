@@ -1,0 +1,84 @@
+{
+	"info": {
+		"_postman_id": "0fc517cd-3f27-4ecf-aebd-868513bdc721",
+		"name": "Health",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{dcdhub_api_url}}/health",
+					"host": [
+						"{{dcdhub_api_url}}"
+					],
+					"path": [
+						"health"
+					]
+				},
+				"description": "Check status of the DCD Hub."
+			},
+			"response": [
+				{
+					"name": "health",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/health",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "content-length",
+							"value": "36"
+						},
+						{
+							"key": "etag",
+							"value": "W/\"24-lfZ1AtqDEeA+k92N+W+plZ5nFvg\""
+						},
+						{
+							"key": "date",
+							"value": "Fri, 27 Sep 2019 18:28:57 GMT"
+						},
+						{
+							"key": "x-envoy-upstream-service-time",
+							"value": "2"
+						},
+						{
+							"key": "server",
+							"value": "envoy"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": 0,\n    \"message\": \"OK\"\n}"
+				}
+			]
+		}
+	],
+	"protocolProfileBehavior": {}
+}

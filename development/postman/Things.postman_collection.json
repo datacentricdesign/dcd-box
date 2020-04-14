@@ -1,0 +1,243 @@
+{
+	"info": {
+		"_postman_id": "c508e455-5f95-42a8-85db-451091ecd589",
+		"name": "Things",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a083e8ef-a48b-4379-8e71-b5ef56b73c63",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "FGqSGsnXm29l_JdUduMSAvFlHu1vUPAma7_-VWiDO8w.QP658q8Fz1hbYXvfVp23fHVg2NaudrtJKmzrRNYfTws",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{dcdhub_api_url}}/things",
+					"host": [
+						"{{dcdhub_api_url}}"
+					],
+					"path": [
+						"things"
+					]
+				},
+				"description": "List Things"
+			},
+			"response": []
+		},
+		{
+			"name": "Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "769efaf4-c7da-4472-be48-91bd1931dc07",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Check Thing id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    console.log(jsonData);",
+							"    pm.environment.set(\"thing_id\", jsonData.thing.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "A6EU3bxsIKen5iyEdi1MSaAQ_nAHmouKQkG3MWhdRic.7iieKAk2BWc0J35iGqjjl_KWcsovAvgX_y2S3dnK2UI",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Nano Example\",\n\t\"type\": \"Arduino\",\n\t\"description\": \"Arduino Nano 33 IoT\"\n}"
+				},
+				"url": {
+					"raw": "{{dcdhub_api_url}}/things?jwt=true",
+					"host": [
+						"{{dcdhub_api_url}}"
+					],
+					"path": [
+						"things"
+					],
+					"query": [
+						{
+							"key": "jwt",
+							"value": "true"
+						}
+					]
+				},
+				"description": "Create a Thing"
+			},
+			"response": []
+		},
+		{
+			"name": "Read",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "jEuxgwYm0J8gcCguBYb4SuRwQrpS2Spr271gklGnquI.LWSeDVwzzUd4uBPOszDhNURvcfImHKPqRbPhuKrBQlI",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{dcdhub_api_url}}/things/{{thing_id}}",
+					"host": [
+						"{{dcdhub_api_url}}"
+					],
+					"path": [
+						"things",
+						"{{thing_id}}"
+					]
+				},
+				"description": "Read a Thing"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "jEuxgwYm0J8gcCguBYb4SuRwQrpS2Spr271gklGnquI.LWSeDVwzzUd4uBPOszDhNURvcfImHKPqRbPhuKrBQlI",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{dcdhub_api_url}}/things/{{thing_id}}",
+					"host": [
+						"{{dcdhub_api_url}}"
+					],
+					"path": [
+						"things",
+						"{{thing_id}}"
+					]
+				},
+				"description": "Delete a Thing"
+			},
+			"response": []
+		},
+		{
+			"name": "Update PEM",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"thingId\": \"{{thing_id}}\",\n\t\"pem\": \"-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAoLl89OZVsC0xGPElHKVa\nHxquG2SWQ6YxyjDXG6O6mCe0LOkSb7ig3naMNDQNqVYSMNBRTKUffNuqAlyvu8mo\n2a0Xp28a03Hu88aG5PvQqIEfS2OrYlpPelcjHC3BaEFaU1e8HFL08Hz2WxrPuv48\novlbsqXmSf4Aai+qPp45h88IavpbzWdU71bO+NpiXqgpJCIDOT/pc8jbX0+dG9N7\n+sL3NA4b1sZ3AMrOaHXp9b9i/J7YGekGrtefNX+zJo1FGTc+1+pLptpoOiIH60IG\nYfutInB65A2FxaJrK+iBvXdEAgqrMIKl1VV4hudiPf6G7NQ4KBzbMm7OAnP695Gv\nNBwBVOu+rU7uZEZLlk3BEV/RoyuPmiI3G7iRCureMAjHuAXYnhFPPcJaY382U1Ve\nGvPlmUKVgcogdZ+M/phOT/qjZqzuW4IMtdiKseGWRDjX14nwzd6KAV8PG6hQIROq\nEiwmvdRTVJ8HCHOW0xMTjJmzgmCJ5cbNCgEcdDn5cSasJEjOdAtdBAqjbAL2XGfV\ntmudNWTH6IMOH4YNWBYbkEStvNkRXLrGLRilMxUCylRTtWh+tdRady05Q/zejsFu\n6qH3g+kIRcHblEYyozj/ooinAUJG29uTFcKp4U6EyrjpFBD/e4yt42jWiLmDqjmC\nkwjtnpeClZAkcJ+677VJzBkCAwEAAQ==\n-----END PUBLIC KEY-----\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{dcdhub_api_url}}/things/pem",
+					"host": [
+						"{{dcdhub_api_url}}"
+					],
+					"path": [
+						"things",
+						"pem"
+					]
+				},
+				"description": "Update the PEM file containing a public key, so that the Hub can identify a Thing as data transmitter."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

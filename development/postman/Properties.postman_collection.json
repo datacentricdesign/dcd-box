@@ -1,0 +1,489 @@
+{
+	"info": {
+		"_postman_id": "34487f63-7ad9-49a3-b6f5-c0ddea495101",
+		"name": "Properties",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Thing's Property",
+			"item": [
+				{
+					"name": "Create (Thing)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3a183fe4-07e9-46b6-b459-802600bbbc98",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Check Property id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    console.log(jsonData);",
+									"    pm.environment.set(\"property_id\", jsonData.property.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "drk4Eiba0irvy4Nw9D31pj0IjfCHT07HOWoPsDrOs5A.679qNKpW3A9tKpNxlFGhn9KH-wSuH3jljGi_fafgiAE",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"My test\",\n\t\"description\": \"Number of coffee\",\n\t\"type\": \"COUNT\"\n}"
+						},
+						"url": {
+							"raw": "{{dcdhub_api_url}}/things/{{thing_id}}/properties",
+							"host": [
+								"{{dcdhub_api_url}}"
+							],
+							"path": [
+								"things",
+								"{{thing_id}}",
+								"properties"
+							]
+						},
+						"description": "Create a Thing's Property"
+					},
+					"response": []
+				},
+				{
+					"name": "List (Thing)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "93638c4c-350e-4c0a-9bac-d663309d8ea1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "9hFjMWFqrl6Ym8Ty86mwl4mbq8UVkby2w0h4i8zCB3E.8-zzdWKI45q2Lnfw6FuN2TsHK34sD3FeVkC_KLsQOHI",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dcdhub_api_url}}/things/{{thing_id}}/properties",
+							"host": [
+								"{{dcdhub_api_url}}"
+							],
+							"path": [
+								"things",
+								"{{thing_id}}",
+								"properties"
+							]
+						},
+						"description": "List Thing's Properties"
+					},
+					"response": []
+				},
+				{
+					"name": "Read (Thing)",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "9hFjMWFqrl6Ym8Ty86mwl4mbq8UVkby2w0h4i8zCB3E.8-zzdWKI45q2Lnfw6FuN2TsHK34sD3FeVkC_KLsQOHI",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dcdhub_api_url}}/things/{{thing_id}}/properties/{{property_id}}?from=0&to={{$timestamp}}000",
+							"host": [
+								"{{dcdhub_api_url}}"
+							],
+							"path": [
+								"things",
+								"{{thing_id}}",
+								"properties",
+								"{{property_id}}"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "0"
+								},
+								{
+									"key": "to",
+									"value": "{{$timestamp}}000"
+								}
+							]
+						},
+						"description": "Read a Thing's Property."
+					},
+					"response": []
+				},
+				{
+					"name": "Update (Thing)",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "9hFjMWFqrl6Ym8Ty86mwl4mbq8UVkby2w0h4i8zCB3E.8-zzdWKI45q2Lnfw6FuN2TsHK34sD3FeVkC_KLsQOHI",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": \"{{property_id}}\",\n\t\"values\": [\n\t\t[{{$timestamp}}000,{{$randomInt}},{{$randomInt}},{{$randomInt}}],\n\t\t[{{$timestamp}}001,{{$randomInt}},{{$randomInt}},{{$randomInt}}],\n\t\t[{{$timestamp}}002,{{$randomInt}},{{$randomInt}},{{$randomInt}}]\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{dcdhub_api_url}}/things/{{thing_id}}/properties/{{property_id}}",
+							"host": [
+								"{{dcdhub_api_url}}"
+							],
+							"path": [
+								"things",
+								"{{thing_id}}",
+								"properties",
+								"{{property_id}}"
+							]
+						},
+						"description": "Update a Thing's Property."
+					},
+					"response": []
+				},
+				{
+					"name": "Update (Thing, No timestamp)",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "9hFjMWFqrl6Ym8Ty86mwl4mbq8UVkby2w0h4i8zCB3E.8-zzdWKI45q2Lnfw6FuN2TsHK34sD3FeVkC_KLsQOHI",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": \"{{property_id}}\",\n\t\"values\": [\n\t\t[{{$randomInt}},{{$randomInt}},{{$randomInt}}],\n\t\t[{{$randomInt}},{{$randomInt}},{{$randomInt}}],\n\t\t[{{$randomInt}},{{$randomInt}},{{$randomInt}}]\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{dcdhub_api_url}}/things/{{thing_id}}/properties/{{property_id}}",
+							"host": [
+								"{{dcdhub_api_url}}"
+							],
+							"path": [
+								"things",
+								"{{thing_id}}",
+								"properties",
+								"{{property_id}}"
+							]
+						},
+						"description": "Update a Thing's Property without providing timestamp"
+					},
+					"response": []
+				},
+				{
+					"name": "Update (Thing, property fields update)",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "9hFjMWFqrl6Ym8Ty86mwl4mbq8UVkby2w0h4i8zCB3E.8-zzdWKI45q2Lnfw6FuN2TsHK34sD3FeVkC_KLsQOHI",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": \"{{property_id}}\",\n\t\"name\": \"Change name\",\n\t\"description\": \"Change description\",\n\t\"values\": [\n\t\t[{{$randomInt}},{{$randomInt}},{{$randomInt}}],\n\t\t[{{$randomInt}},{{$randomInt}},{{$randomInt}}],\n\t\t[{{$randomInt}},{{$randomInt}},{{$randomInt}}]\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{dcdhub_api_url}}/things/{{thing_id}}/properties/{{property_id}}",
+							"host": [
+								"{{dcdhub_api_url}}"
+							],
+							"path": [
+								"things",
+								"{{thing_id}}",
+								"properties",
+								"{{property_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update (Thing, CSV file)",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "9hFjMWFqrl6Ym8Ty86mwl4mbq8UVkby2w0h4i8zCB3E.8-zzdWKI45q2Lnfw6FuN2TsHK34sD3FeVkC_KLsQOHI",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/jbourgeois/Desktop/example.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dcdhub_api_url}}/things/{{thing_id}}/properties/{{property_id}}",
+							"host": [
+								"{{dcdhub_api_url}}"
+							],
+							"path": [
+								"things",
+								"{{thing_id}}",
+								"properties",
+								"{{property_id}}"
+							]
+						},
+						"description": "Update a Thing's Property with a CSV file."
+					},
+					"response": []
+				},
+				{
+					"name": "Update (Thing, query values)",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "9hFjMWFqrl6Ym8Ty86mwl4mbq8UVkby2w0h4i8zCB3E.8-zzdWKI45q2Lnfw6FuN2TsHK34sD3FeVkC_KLsQOHI",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{dcdhub_api_url}}/things/{{thing_id}}/properties/{{property_id}}/values/{{$randomInt}},{{$randomInt}}",
+							"host": [
+								"{{dcdhub_api_url}}"
+							],
+							"path": [
+								"things",
+								"{{thing_id}}",
+								"properties",
+								"{{property_id}}",
+								"values",
+								"{{$randomInt}},{{$randomInt}}"
+							]
+						},
+						"description": "Update a Thing's Property with query values and attached file."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete (Thing)",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "9hFjMWFqrl6Ym8Ty86mwl4mbq8UVkby2w0h4i8zCB3E.8-zzdWKI45q2Lnfw6FuN2TsHK34sD3FeVkC_KLsQOHI",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dcdhub_api_url}}/things/{{thing_id}}/properties/{{property_id}}",
+							"host": [
+								"{{dcdhub_api_url}}"
+							],
+							"path": [
+								"things",
+								"{{thing_id}}",
+								"properties",
+								"{{property_id}}"
+							]
+						},
+						"description": "Delete a Thing's Property."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

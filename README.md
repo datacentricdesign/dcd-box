@@ -1,10 +1,56 @@
 # Data-Centric Design Hub
 
-## Development
+## Local setup
 
-* Install Docker on your machine: https://docs.docker.com/install
+First, you need to install Docker on your machine: https://docs.docker.com/install
 
-docker-compose -f docker-compose-without-app.yml up --build -d
+Then, clone this repository:
+
+```bash
+git clone https://github.com/datacentricdesign/dcd-hub
+```
+
+And checkout on the develop branch.
+
+```bash
+git checkout develop
+```
+
+Run the init script to clone the repositories of all containers and set up the default environment variables.
+
+```bash
+./development/init.sh
+```
+
+Finally, boot up the dcd hub with docker-compose
+
+```
+docker-compose -f development/docker-compose-dev-no-app.yml up -d
+```
+
+## Postman
+
+To play with the hub without application, you can use Postman.
+
+You can first import the environment variables from development/postman/postman-environment.json
+
+In the same folder, you will find the description of all API collections.
+
+For most APIs you will need a token. To get a token, click on the tab 'Authorization'.
+
+Select type 'OAuth 2.0' and 'Request Headers', then press the orange button 'Get New Access Token'.
+
+![Example of Authorization with Thing List - Postman](development/docs/authorization.png)
+
+Give a name to your token, and use the environment variable to load the required params.
+
+As Client Authentication, make sure you select 'Send client credentials in body'
+
+![Example setup for bearer token - Postman](development/docs/get-token.png)
+
+Finally, press 'Request Token'. You should land on the sign in/up page (the identity provider).
+
+Sign up and consent to the test app to get the token.
 
 ## Deployment
 

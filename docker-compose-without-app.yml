@@ -30,7 +30,7 @@ services:
     depends_on:
       - hydra-migrate
     command:
-      serve all
+      serve all $SECURED_OPTION
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - SECRETS_SYSTEM=$HYDRA_SYSTEM_SECRET
@@ -58,11 +58,12 @@ services:
     image: quay.io/datawire/ambassador:0.76.0
     container_name: ambassador
     ports:
-      - 80:8080
-      - 443:8443
+      - 8080:8080
+#      - 80:8080
+#      - 443:8443
     volumes:
-      - ./config/ambassador:/ambassador/ambassador-config
-      - ./certs:/etc/certs
+      - ./config/$ENVIRONMENT/ambassador:/ambassador/ambassador-config
+#      - ./certs:/etc/certs
     environment:
       # don't try to watch Kubernetes for configuration changes
       - AMBASSADOR_NO_KUBEWATCH=no_kubewatch
@@ -167,7 +168,7 @@ services:
     image: influxdb
     container_name: influxdb
     volumes:
-      - /data/influxdb:/var/lib/influxdb
+      - $HOST_DATA_FOLDER/influxdb:/var/lib/influxdb
     ports:
       - 8086:8086
       - 8083:8083
@@ -182,7 +183,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQL_SYSTEM_SECRET
     volumes:
-      - /data/mysql:/var/lib/mysql
+      - $HOST_DATA_FOLDER/mysql:/var/lib/mysql
       - ./config/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 3306:3306
@@ -195,7 +196,7 @@ services:
       - POSTGRES_PASSWORD=$AC_DB_PASSWORD
       - POSTGRES_DB=$AC_DB
     volumes:
-      - /data/postgresql:/var/lib/postgresql/data
+      - $HOST_DATA_FOLDER/postgresql:/var/lib/postgresql/data
 
   # == == == == == Logging == == == == ==
 
@@ -214,7 +215,7 @@ services:
     command: bin/logstash -f /opt/logstash/logstash.conf
     volumes:
       - ./config/logs/logstash.conf:/opt/logstash/logstash.conf
-      - /data/logs:/var/log/logstash
+      - $HOST_DATA_FOLDER/logs:/var/log/logstash
 
   # == == == == == Data-Centric Hub - APIs == == == == ==
 
@@ -227,9 +228,10 @@ services:
       - LOG_LEVEL=$LOG_LEVEL
       - PORT=4478
       - CRYPTO_KEY=$CRYPTO_KEY
-      - MODEL_HOST=$HOST
-      - KAFKA=true
-      - HTTPS=true
+      - MODEL_HOST=mysql
+      - MODEL_PASS=$MYSQL_SYSTEM_SECRET
+      - KAFKA=false
+      - HTTPS=false
       - KAFKA_HOST=kafka
       - KAFKA_PORT=$KAFKA_PORT
       - API_URL=$PROTOCOL://$HOST:$PORT/api
@@ -243,7 +245,7 @@ services:
       - OAUTH2_CLIENT_SECRET=$API_HTTP_CLIENT_SECRET
       - OAUTH2_INTROSPECT_URL=http://hydra:4445/oauth2/introspect
     volumes:
-      - /data/files:/usr/src/app/files
+      - $HOST_DATA_FOLDER/files:/usr/src/app/files
 
   dcd-api-mqtt:
 #    image: datacentricdesign/dcd-api-mqtt:$DCD_API_MQTT_VERSION
@@ -254,15 +256,16 @@ services:
       - 8883:8883
     environment:
       - LOG_LEVEL=$LOG_LEVEL
-      - HTTPS=true
+      - HTTPS=false
       - MQTT_HOST=0.0.0.0
       - CRYPTO_KEY=$CRYPTO_KEY
-      - KAFKA=true
+      - KAFKA=false
       - KAFKA_HOST=kafka
       - KAFKA_PORT=$KAFKA_PORT
       - OAUTH2_CLIENT_ID=$API_MQTT_CLIENT_ID
       - OAUTH2_CLIENT_SECRET=$API_MQTT_CLIENT_SECRET
-      - MODEL_HOST=$HOST
+      - MODEL_HOST=mysql
+      - MODEL_PASS=$MYSQL_SYSTEM_SECRET
       - API_URL=$PROTOCOL://$HOST:$PORT/api
       - KETO_URL=http://keto:4466
       - HYDRA_ADMIN_URL=http://hydra:4445
@@ -278,13 +281,13 @@ services:
   dcd-store-influxdb:
 #    image: datacentricdesign/dcd-store-influxdb:$DCD_STORE_INFLUXDB_VERSION
     build:
-      context: ../dcd-api-mqtt
+      context: ../dcd-store-influxdb
     container_name: dcd-store-influxdb
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - INFLUXDB_HOST=influxdb
       - INFLUXDB_NAME=dcdhub
-      - HTTPS=true
+      - HTTPS=false
       - CRYPTO_KEY=$CRYPTO_KEY
       - KAFKA=true
       - KAFKA_HOST=kafka
@@ -299,11 +302,11 @@ services:
     container_name: dcd-app-identity-provider
     environment:
       - LOG_LEVEL=$LOG_LEVEL
-      - HTTPS=true
+      - HTTPS=false
       - PORT=8888
       - CRYPTO_KEY=$CRYPTO_KEY
       - API_URL=http://dcd-api-http:4478/api
-      - KETO_URL=$PROTOCOL://$HOST:$PORT
+      - KETO_URL=http://keto:4466
       - HYDRA_ADMIN_URL=http://hydra:4445
       - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
       - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
@@ -311,46 +314,3 @@ services:
       - OAUTH2_CLIENT_SECRET=$APP_IDENTITY_PROVIDER_CLIENT_SECRET
       - OAUTH2_SCOPE=$APP_IDENTITY_PROVIDER_SCOPE
       - FIRST_PARTY_APPS=$APP_SUBJECT_CLIENT_ID,$APP_DESIGNER_CLIENT_ID,$APP_MOBILE_CLIENT_ID
-
-  dcd-app-subject:
-#    image: datacentricdesign/dcd-app-subject:$DCD_APP_SUBJECT_VERSION
-    build:
-      context: ../dcd-app-subject
-    container_name: dcd-app-subject
-    environment:
-      - LOG_LEVEL=$LOG_LEVEL
-      - HTTPS=true
-      - PORT=8080
-      - BASE_URL=/subject
-      - SERVER_URL=$PROTOCOL://$HOST:$PORT
-      - OAUTH2_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth
-      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
-      - OAUTH2_REVOKE_URL=$PROTOCOL://$HOST:$PORT/oauth2/revoke
-      - OAUTH2_CLIENT_ID=$APP_SUBJECT_CLIENT_ID
-      - OAUTH2_CLIENT_SECRET=$APP_SUBJECT_CLIENT_SECRET
-      - OAUTH2_PROFILE=$PROTOCOL://$HOST:$PORT/userinfo
-      - OAUTH2_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/subject/auth/callback
-      - OAUTH2_SCOPE=$APP_SUBJECT_SCOPE
-      - API_URL=$PROTOCOL://$HOST:$PORT/api
-      - MAPS_KEY=$MAPS_KEY
-
-  dcd-app-designer:
-#    image: datacentricdesign/dcd-app-designer:$DCD_APP_DESIGNER_VERSION
-    build:
-      context: ../dcd-app-designer
-    container_name: dcd-app-designer
-    environment:
-      - LOG_LEVEL=$LOG_LEVEL
-      - HTTPS=true
-      - PORT=8080
-      - BASE_URL=/designer
-      - SERVER_URL=$PROTOCOL://$HOST:$PORT
-      - OAUTH2_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth
-      - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
-      - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
-      - OAUTH2_CLIENT_ID=$APP_DESIGNER_CLIENT_ID
-      - OAUTH2_CLIENT_SECRET=$APP_DESIGNER_CLIENT_SECRET
-      - OAUTH2_PROFILE=$PROTOCOL://$HOST:$PORT/userinfo
-      - OAUTH2_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/designer/auth/callback
-      - OAUTH2_SCOPE=$APP_DESIGNER_SCOPE
-      - API_URL=$PROTOCOL://$HOST:$PORT/api

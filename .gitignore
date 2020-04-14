@@ -1,3 +1,4 @@
 config/oathkeeper/rules/*.json
 .idea
 .env
+*.iml

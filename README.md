@@ -1,5 +1,13 @@
 # Data-Centric Design Hub
 
+## Development
+
+* Install Docker on your machine: https://docs.docker.com/install
+
+docker-compose -f docker-compose-without-app.yml up --build -d
+
+## Deployment
+
 Deployment repository of the Data-Centric Design Hub (https://datacentricdesign.org)
 
 Requirements:
@@ -12,8 +20,6 @@ Then, post install:
 
 https://docs.docker.com/install/linux/linux-postinstall/
 
-# Deployment
-
 Create a folder for the system and a folder for the data.
 
 ```shell script
@@ -21,7 +27,7 @@ mkdir dcd
 mkdir data
 ```
 
-## Clone dcd-hub
+### Clone dcd-hub
 
 Clone the repository and step into the directory.
 
@@ -48,7 +54,7 @@ nano .env
 You will also need to replace the MAPS_API with your own Google Maps API to load
 maps in applications.
 
-## SSL certificate
+### SSL certificate
 
 Request a SSL certificate from your system administrator. You will need to 
  provide them with a CSR file. Then, place the provided files in /etc/ssl/certs/
@@ -58,7 +64,7 @@ Request a SSL certificate from your system administrator. You will need to
 - dcd-hub.key
 - dcd-hub.pem
 
-# For release
+## For release
 
 ```shell script
 git flow release start RELEASE [BASE] 
@@ -67,7 +73,7 @@ git flow release finish RELEASE
 git push origin --tags
 ```
 
-# Adding Clients
+## Adding Clients
 
 Web app example:
 
@@ -99,20 +105,20 @@ docker run --rm -it   -e HYDRA_ADMIN_URL=https://your-domain:443 \
  --callbacks nl.tudelft.ide.dcd-mobile-app:/oauth2redirect
 ```
 
-# Changelog
+## Changelog
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+### [Unreleased]
 
 - Facilitate deployment/replication: default config
 
-## 0.0.1 - 2019-08-19
+### 0.0.1 - 2019-08-19
 
-### Added
+#### Added
 
 - Ory Hydra for OAuth2 management
 - Ory Keto for Access Control Policies

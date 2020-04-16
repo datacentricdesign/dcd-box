@@ -24,8 +24,9 @@ Run the init script to clone the repositories of all containers and set up the d
 
 Finally, boot up the dcd hub with docker-compose
 
-```
-docker-compose -f development/docker-compose-dev-no-app.yml up -d
+```bash
+cd development
+docker-compose up -d
 ```
 
 ## Postman

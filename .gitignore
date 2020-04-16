@@ -1,4 +1,4 @@
 config/oathkeeper/rules/*.json
 .idea
-.env
+development/.env
 *.iml

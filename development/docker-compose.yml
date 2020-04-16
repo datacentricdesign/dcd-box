@@ -1,26 +1,24 @@
 version: '3'
 
+# This compose will load all the containers required
+# for running the hub locally, without client apps
 services:
 
-  hydra-migrate:
-    image: oryd/hydra:$HYDRA_VERSION
-    container_name: hydra-migrate
+  # Proxy making only the services we want to expose available on the same port
+  ambassador:
+    image: quay.io/datawire/ambassador:0.76.0
+    container_name: ambassador
+    ports:
+      - $PORT:8080
+    volumes:
+      - ./config/ambassador:/ambassador/ambassador-config
     environment:
-      - LOG_LEVEL=$LOG_LEVEL
-      - HYDRA_SYSTEM_SECRET=$HYDRA_SYSTEM_SECRET
-    command:
-      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable --yes
-    restart: on-failure
+      # don't try to watch Kubernetes for configuration changes
+      - AMBASSADOR_NO_KUBEWATCH=no_kubewatch
+      - AMBASSADOR_NO_SECRETS=True
 
-  keto-migrate:
-    image: oryd/keto:$KETO_VERSION
-    container_name: keto-migrate
-    environment:
-      - LOG_LEVEL=$LOG_LEVEL
-    command:
-      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
-    restart: on-failure
-
+  # Hydra is the OAuth2 server
+  # It allows client applications
   hydra:
     image: oryd/hydra:$HYDRA_VERSION
     container_name: hydra
@@ -30,7 +28,7 @@ services:
     depends_on:
       - hydra-migrate
     command:
-      serve all
+      serve all $SECURED_OPTION
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - SECRETS_SYSTEM=$HYDRA_SYSTEM_SECRET
@@ -54,20 +52,19 @@ services:
       - ./config/hydra/.hydra:/.hydra
     restart: on-failure
 
-  ambassador:
-    image: quay.io/datawire/ambassador:0.76.0
-    container_name: ambassador
-    ports:
-      - 80:8080
-      - 443:8443
-    volumes:
-      - ./config/ambassador:/ambassador/ambassador-config
-      - ./certs:/etc/certs
+  # Create all the necessary data environment in postgres for Hydra
+  hydra-migrate:
+    image: oryd/hydra:$HYDRA_VERSION
+    container_name: hydra-migrate
     environment:
-      # don't try to watch Kubernetes for configuration changes
-      - AMBASSADOR_NO_KUBEWATCH=no_kubewatch
-      - AMBASSADOR_NO_SECRETS=True
+      - LOG_LEVEL=$LOG_LEVEL
+      - HYDRA_SYSTEM_SECRET=$HYDRA_SYSTEM_SECRET
+    command:
+      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable --yes
+    restart: on-failure
 
+  # Keto is the Access Control Policy (ACP) manager
+  # It allows access to resources (e.g. things, persons...)
   keto:
     image: oryd/keto:$KETO_VERSION
     container_name: keto
@@ -86,10 +83,20 @@ services:
       - AUTHENTICATOR_OAUTH2_CLIENT_CREDENTIALS_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
     restart: on-failure
 
+  # Creates all the necessary data environment in postgres for Keto
+  keto-migrate:
+    image: oryd/keto:$KETO_VERSION
+    container_name: keto-migrate
+    environment:
+      - LOG_LEVEL=$LOG_LEVEL
+    command:
+      migrate sql postgres://$AC_DB_USER:$AC_DB_PASSWORD@postgresd:5432/$AC_DB?sslmode=disable
+    restart: on-failure
+
+  # Creates all Hydra Clients (from config/hydra/clients) and Keto ACPs (fromconfig/keto/policies|roles)
   configurator:
     build:
-      context: .
-      dockerfile: configurator/Dockerfile
+      context: ../configurator
       args:
         - HYDRA_VERSION=$HYDRA_VERSION
         - KETO_VERSION=$KETO_VERSION
@@ -98,28 +105,19 @@ services:
       - hydra
       - keto
     volumes:
-      - ./scripts:/scripts
+      - ../configurator/scripts:/scripts
     environment:
       # All of these URLs MUST NOT end with a trailing slash. This is very important!
       - HYDRA_URL=http://hydra:4444
       - HYDRA_ADMIN_URL=http://hydra:4445
       - KETO_URL=http://keto:4466
-#      - OATHKEEPER_API_URL=http://oathkeeper-api:4456
-#      - OATHKEEPER_PROXY_URL=$PROTOCOL://$HOST:$PORT
-
       # This sets the prefix for all resource, action, and subject names.
       # Be aware that this prefix is automatically applied to all OAuth2 Clients as well.
       - "HYDRA_SUBJECT_PREFIX=subjects:hydra:"
       - "HYDRA_RESOURCE_PREFIX=resources:hydra:"
       - "HYDRA_ACTION_PREFIX=actions:hydra:"
-      - "OATHKEEPER_RESOURCE_PREFIX=resources:oathkeeper:"
-      - "OATHKEEPER_ACTION_PREFIX=actions:oathkeeper:"
       - "KETO_RESOURCE_PREFIX=resources:keto:"
       - "KETO_ACTION_PREFIX=actions:keto:"
-
-#      - OATHKEEPER_HYDRA_JWK_SET_ID=jwk:oathkeeper
-#      - OATHKEEPER_HYDRA_CLIENT_ID=$OATHKEEPER_CLIENT_ID
-#      - OATHKEEPER_HYDRA_CLIENT_SECRET=$OATHKEEPER_CLIENT_SECRET
       - KETO_CLIENT_ID=$KETO_CLIENT_ID
       - KETO_CLIENT_SECRET=$KETO_CLIENT_SECRET
       - API_HTTP_CLIENT_ID=$API_HTTP_CLIENT_ID
@@ -142,12 +140,8 @@ services:
       - HOST=$HOST
     restart: on-failure
 
-  zookeeper:
-    image: wurstmeister/zookeeper
-    container_name: zookeeper
-    ports:
-      - 2181:2181
-
+  # Kafka is a data pipeline, ingesting data from producers (e.g. APIs, data processors)
+  # and distributing it to all consumers (e.g. databases, data processors)
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
@@ -160,14 +154,22 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
+  # Zookeeper is a message layer necessary for Kafka
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - 2181:2181
 
   # == == == == == Stores == == == == ==
 
+  # InfluxDB is a time series database, used to store the data
+  # Stored on $HOST_DATA_FOLDER/influxdb
   influxdb:
     image: influxdb
     container_name: influxdb
     volumes:
-      - /data/influxdb:/var/lib/influxdb
+      - $HOST_DATA_FOLDER/influxdb:/var/lib/influxdb
     ports:
       - 8086:8086
       - 8083:8083
@@ -175,6 +177,24 @@ services:
       - INFLUXDB_DB=$INFLUXDB_DB
       - INFLUXDB_ADMIN_ENABLED=true
 
+  # This Kafka consumer push data into InfluxDB
+  dcd-store-influxdb:
+    #    image: datacentricdesign/dcd-store-influxdb:$DCD_STORE_INFLUXDB_VERSION
+    build:
+      context: ../../dcd-store-influxdb
+    container_name: dcd-store-influxdb
+    environment:
+      - LOG_LEVEL=$LOG_LEVEL
+      - INFLUXDB_HOST=influxdb
+      - INFLUXDB_NAME=dcdhub
+      - HTTPS=false
+      - CRYPTO_KEY=$CRYPTO_KEY
+      - KAFKA=true
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=$KAFKA_PORT
+
+  # mysql is a relational database, used to store metadata
+  # Stored on $HOST_DATA_FOLDER/mysql
   mysql:
     image: mysql:5.7
     container_name: mysql
@@ -182,11 +202,13 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQL_SYSTEM_SECRET
     volumes:
-      - /data/mysql:/var/lib/mysql
-      - ./config/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - $HOST_DATA_FOLDER/mysql:/var/lib/mysql
+      - ../config/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 3306:3306
 
+  # Postgres is a relational database, used to store Hydra and Keto data
+  # Stored on $HOST_DATA_FOLDER/postgresql
   postgresd:
     image: postgres:9.6
     container_name: postgres
@@ -195,9 +217,13 @@ services:
       - POSTGRES_PASSWORD=$AC_DB_PASSWORD
       - POSTGRES_DB=$AC_DB
     volumes:
-      - /data/postgresql:/var/lib/postgresql/data
+      - $HOST_DATA_FOLDER/postgresql:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
   # == == == == == Logging == == == == ==
+  # Logspout and Logstash are used in combination to absorb and store
+  # logs from all containers into $HOST_DATA_FOLDER/logs
 
   logspout:
     image: bekt/logspout-logstash
@@ -213,23 +239,27 @@ services:
     container_name: logstash
     command: bin/logstash -f /opt/logstash/logstash.conf
     volumes:
-      - ./config/logs/logstash.conf:/opt/logstash/logstash.conf
-      - /data/logs:/var/log/logstash
+      - ../config/logs/logstash.conf:/opt/logstash/logstash.conf
+      - $HOST_DATA_FOLDER/logs:/var/log/logstash
 
   # == == == == == Data-Centric Hub - APIs == == == == ==
+  # HTTP and MQTT APIs are 2 ways to interact with the dcd hub
 
   dcd-api-http:
-#    image: datacentricdesign/dcd-api-http:$DCD_API_HTTP_VERSION
     build:
-      context: ../dcd-api-http
+      context: ../../dcd-api-http
     container_name: dcd-api-http
+    ports:
+      - 4478:4478
     environment:
+      - NODE_ENV=$ENVIRONMENT
       - LOG_LEVEL=$LOG_LEVEL
       - PORT=4478
       - CRYPTO_KEY=$CRYPTO_KEY
-      - MODEL_HOST=$HOST
-      - KAFKA=true
-      - HTTPS=true
+      - MODEL_HOST=mysql
+      - MODEL_PASS=$MYSQL_SYSTEM_SECRET
+      - KAFKA=false
+      - HTTPS=false
       - KAFKA_HOST=kafka
       - KAFKA_PORT=$KAFKA_PORT
       - API_URL=$PROTOCOL://$HOST:$PORT/api
@@ -243,26 +273,26 @@ services:
       - OAUTH2_CLIENT_SECRET=$API_HTTP_CLIENT_SECRET
       - OAUTH2_INTROSPECT_URL=http://hydra:4445/oauth2/introspect
     volumes:
-      - /data/files:/usr/src/app/files
+      - $HOST_DATA_FOLDER/files:/usr/src/app/files
 
   dcd-api-mqtt:
-#    image: datacentricdesign/dcd-api-mqtt:$DCD_API_MQTT_VERSION
     build:
-      context: ../dcd-api-mqtt
+      context: ../../dcd-api-mqtt
     container_name: dcd-api-mqtt
     ports:
       - 8883:8883
     environment:
       - LOG_LEVEL=$LOG_LEVEL
-      - HTTPS=true
+      - HTTPS=false
       - MQTT_HOST=0.0.0.0
       - CRYPTO_KEY=$CRYPTO_KEY
-      - KAFKA=true
+      - KAFKA=false
       - KAFKA_HOST=kafka
       - KAFKA_PORT=$KAFKA_PORT
       - OAUTH2_CLIENT_ID=$API_MQTT_CLIENT_ID
       - OAUTH2_CLIENT_SECRET=$API_MQTT_CLIENT_SECRET
-      - MODEL_HOST=$HOST
+      - MODEL_HOST=mysql
+      - MODEL_PASS=$MYSQL_SYSTEM_SECRET
       - API_URL=$PROTOCOL://$HOST:$PORT/api
       - KETO_URL=http://keto:4466
       - HYDRA_ADMIN_URL=http://hydra:4445
@@ -273,37 +303,21 @@ services:
     volumes:
       - ./certs:/etc/certs
 
-  # == == == == == Data-Centric Hub - Stores == == == == ==
-
-  dcd-store-influxdb:
-#    image: datacentricdesign/dcd-store-influxdb:$DCD_STORE_INFLUXDB_VERSION
-    build:
-      context: ../dcd-api-mqtt
-    container_name: dcd-store-influxdb
-    environment:
-      - LOG_LEVEL=$LOG_LEVEL
-      - INFLUXDB_HOST=influxdb
-      - INFLUXDB_NAME=dcdhub
-      - HTTPS=true
-      - CRYPTO_KEY=$CRYPTO_KEY
-      - KAFKA=true
-      - KAFKA_HOST=kafka
-      - KAFKA_PORT=$KAFKA_PORT
-
   # == == == == == Data-Centric Hub - Apps == == == == ==
 
+  # Necessary app to sign in/up and receive an bearer token from Hydra
   dcd-app-identity-provider:
 #    image: datacentricdesign/dcd-app-identity-provider:$DCD_APP_IDENTITY_PROVIDER_VERSION
     build:
-      context: ../dcd-app-identity-provider
+      context: ../../dcd-app-identity-provider
     container_name: dcd-app-identity-provider
     environment:
       - LOG_LEVEL=$LOG_LEVEL
-      - HTTPS=true
+      - HTTPS=false
       - PORT=8888
       - CRYPTO_KEY=$CRYPTO_KEY
-      - API_URL=http://dcd-api-http:4478/api
-      - KETO_URL=$PROTOCOL://$HOST:$PORT
+      - API_URL=http://$API_HOST:4478/api
+      - KETO_URL=http://keto:4466
       - HYDRA_ADMIN_URL=http://hydra:4445
       - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
       - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
@@ -311,46 +325,3 @@ services:
       - OAUTH2_CLIENT_SECRET=$APP_IDENTITY_PROVIDER_CLIENT_SECRET
       - OAUTH2_SCOPE=$APP_IDENTITY_PROVIDER_SCOPE
       - FIRST_PARTY_APPS=$APP_SUBJECT_CLIENT_ID,$APP_DESIGNER_CLIENT_ID,$APP_MOBILE_CLIENT_ID
-
-  dcd-app-subject:
-#    image: datacentricdesign/dcd-app-subject:$DCD_APP_SUBJECT_VERSION
-    build:
-      context: ../dcd-app-subject
-    container_name: dcd-app-subject
-    environment:
-      - LOG_LEVEL=$LOG_LEVEL
-      - HTTPS=true
-      - PORT=8080
-      - BASE_URL=/subject
-      - SERVER_URL=$PROTOCOL://$HOST:$PORT
-      - OAUTH2_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth
-      - OAUTH2_TOKEN_URL=$PROTOCOL://$HOST:$PORT/oauth2/token
-      - OAUTH2_REVOKE_URL=$PROTOCOL://$HOST:$PORT/oauth2/revoke
-      - OAUTH2_CLIENT_ID=$APP_SUBJECT_CLIENT_ID
-      - OAUTH2_CLIENT_SECRET=$APP_SUBJECT_CLIENT_SECRET
-      - OAUTH2_PROFILE=$PROTOCOL://$HOST:$PORT/userinfo
-      - OAUTH2_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/subject/auth/callback
-      - OAUTH2_SCOPE=$APP_SUBJECT_SCOPE
-      - API_URL=$PROTOCOL://$HOST:$PORT/api
-      - MAPS_KEY=$MAPS_KEY
-
-  dcd-app-designer:
-#    image: datacentricdesign/dcd-app-designer:$DCD_APP_DESIGNER_VERSION
-    build:
-      context: ../dcd-app-designer
-    container_name: dcd-app-designer
-    environment:
-      - LOG_LEVEL=$LOG_LEVEL
-      - HTTPS=true
-      - PORT=8080
-      - BASE_URL=/designer
-      - SERVER_URL=$PROTOCOL://$HOST:$PORT
-      - OAUTH2_AUTH_URL=$PROTOCOL://$HOST:$PORT/oauth2/auth
-      - OAUTH2_TOKEN_URL=http://hydra:4444/oauth2/token
-      - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
-      - OAUTH2_CLIENT_ID=$APP_DESIGNER_CLIENT_ID
-      - OAUTH2_CLIENT_SECRET=$APP_DESIGNER_CLIENT_SECRET
-      - OAUTH2_PROFILE=$PROTOCOL://$HOST:$PORT/userinfo
-      - OAUTH2_REDIRECT_URL=$PROTOCOL://$HOST:$PORT/designer/auth/callback
-      - OAUTH2_SCOPE=$APP_DESIGNER_SCOPE
-      - API_URL=$PROTOCOL://$HOST:$PORT/api

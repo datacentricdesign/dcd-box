@@ -1,0 +1,6 @@
+apiVersion: ambassador/v1
+kind:  Mapping
+name:  dcd_app_designer_mapping
+prefix: /designer
+rewrite: /designer
+service: dcd-app-designer:8080

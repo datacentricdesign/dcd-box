@@ -1,0 +1,7 @@
+apiVersion: ambassador/v1
+kind:  Mapping
+name:  dcd_api_mqtt_mapping
+prefix: /ws
+rewrite: /
+timeout_ms: 10000
+service: dcd-api-mqtt:3000

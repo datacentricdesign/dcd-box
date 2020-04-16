@@ -1,0 +1,8 @@
+apiVersion: ambassador/v1
+kind:  Mapping
+name:  hydra_userinfo_mapping
+prefix: /userinfo
+rewrite: /userinfo
+#add_request_headers:
+#  X-Forwarded-Proto: "https"
+service: hydra:4444

@@ -19,14 +19,13 @@ git checkout develop
 Run the init script to clone the repositories of all containers and set up the default environment variables.
 
 ```bash
+chmod +x development/init.sh
 ./development/init.sh
 ```
 
 Finally, boot up the dcd hub with docker-compose
 
 ```bash
-cd development
-cp development.env .env
 docker-compose up -d
 ```
 

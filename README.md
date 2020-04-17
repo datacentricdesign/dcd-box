@@ -54,6 +54,20 @@ Finally, press 'Request Token'. You should land on the sign in/up page (the iden
 
 Sign up and consent to the test app to get the token.
 
+## Docker cmd
+
+docker ps: list all running containers
+
+docker-compose up: to run a compose file, -d for detached (no output in the console), --build (force rebuilding)
+docker-compose start <container>
+docker-compose stop
+
+docker logs dcd-api-http -f (-f to stay connected to new logs, --tail 1000 for only getting the last 1000 logs)
+
+docker exec -it dcd-api-http /bin/bash (getting inside a container)
+
+
+
 ## Deployment
 
 Deployment repository of the Data-Centric Design Hub (https://datacentricdesign.org)

@@ -26,6 +26,7 @@ Finally, boot up the dcd hub with docker-compose
 
 ```bash
 cd development
+cp development.env .env
 docker-compose up -d
 ```
 

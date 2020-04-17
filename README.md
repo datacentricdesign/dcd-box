@@ -67,7 +67,6 @@ docker logs dcd-api-http -f (-f to stay connected to new logs, --tail 1000 for o
 docker exec -it dcd-api-http /bin/bash (getting inside a container)
 
 
-
 ## Deployment
 
 Deployment repository of the Data-Centric Design Hub (https://datacentricdesign.org)
@@ -133,38 +132,6 @@ git flow release start RELEASE [BASE]
 git flow release publish RELEASE 
 git flow release finish RELEASE 
 git push origin --tags
-```
-
-## Adding Clients
-
-Web app example:
-
-```shell script
-docker run --rm -it   -e HYDRA_ADMIN_URL=https://your-domain:443 \
- oryd/hydra:v1.0.0 \
- clients create --skip-tls-verify \
- --id dcd-app-data-subject  --secret  SECRET-TO-CHANGE \
- --name "DCD - Web App Example" \
- --grant-types authorization_code,refresh_token \
- --response-types token,code,id_token \
- --scope openid,offline,profile,dcd:public,dcd:things,dcd:persons \
- --callbacks https://dwd.tudelft.nl:443/subject/auth/callback \
- --token-endpoint-auth-method client_secret_post
-```
-
-Mobile app example:
-
-```shell script
-docker run --rm -it   -e HYDRA_ADMIN_URL=https://your-domain:443 \
- oryd/hydra:v1.0.0 \
- clients create --skip-tls-verify \
- --token-endpoint-auth-method none \  
- --id dcd-mobile-app \
- --name "DCD - Mobile App Example" \
- --grant-types authorization_code,refresh_token \
- --response-types token,code,id_token \
- --scope openid,offline,profile,dcd:public,dcd:things,dcd:persons \
- --callbacks nl.tudelft.ide.dcd-mobile-app:/oauth2redirect
 ```
 
 ## Changelog

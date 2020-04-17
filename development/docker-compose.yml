@@ -1,5 +1,6 @@
 version: '3'
 
+# FOR DEVELOPMENT/LOCAL USE ONLY
 # This compose will load all the containers required
 # for running the hub locally, without client apps
 services:
@@ -28,7 +29,8 @@ services:
     depends_on:
       - hydra-migrate
     command:
-      serve all $SECURED_OPTION
+      # Allows non secured request to hydra (without SSL/TLS, localhost, for development only)
+      serve all --dangerous-force-http
     environment:
       - LOG_LEVEL=$LOG_LEVEL
       - SECRETS_SYSTEM=$HYDRA_SYSTEM_SECRET
@@ -203,7 +205,7 @@ services:
       - MYSQL_ROOT_PASSWORD=$MYSQL_SYSTEM_SECRET
     volumes:
       - $HOST_DATA_FOLDER/mysql:/var/lib/mysql
-      - ../config/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ../model/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 3306:3306
 
@@ -220,27 +222,6 @@ services:
       - $HOST_DATA_FOLDER/postgresql:/var/lib/postgresql/data
     ports:
       - 5432:5432
-
-  # == == == == == Logging == == == == ==
-  # Logspout and Logstash are used in combination to absorb and store
-  # logs from all containers into $HOST_DATA_FOLDER/logs
-
-  logspout:
-    image: bekt/logspout-logstash
-    container_name: logspout
-    restart: on-failure
-    environment:
-      ROUTE_URIS: logstash://logstash:5000
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
-  logstash:
-    image: logstash:7.2.0
-    container_name: logstash
-    command: bin/logstash -f /opt/logstash/logstash.conf
-    volumes:
-      - ../config/logs/logstash.conf:/opt/logstash/logstash.conf
-      - $HOST_DATA_FOLDER/logs:/var/log/logstash
 
   # == == == == == Data-Centric Hub - APIs == == == == ==
   # HTTP and MQTT APIs are 2 ways to interact with the dcd hub
@@ -300,14 +281,11 @@ services:
       - OAUTH2_REVOKE_URL=http://hydra:4444/oauth2/revoke
       - MQTT_CLIENT_USER=$API_MQTT_CLIENT_ID
       - MQTT_CLIENT_PASS=$API_MQTT_CLIENT_SECRET
-    volumes:
-      - ./certs:/etc/certs
 
   # == == == == == Data-Centric Hub - Apps == == == == ==
 
   # Necessary app to sign in/up and receive an bearer token from Hydra
   dcd-app-identity-provider:
-#    image: datacentricdesign/dcd-app-identity-provider:$DCD_APP_IDENTITY_PROVIDER_VERSION
     build:
       context: ../../dcd-app-identity-provider
     container_name: dcd-app-identity-provider

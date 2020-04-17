@@ -1,6 +1,0 @@
-apiVersion: ambassador/v1
-kind:  Mapping
-name:  dcd_app_subject_mapping
-prefix: /subject
-rewrite: /subject
-service: dcd-app-subject:8080
